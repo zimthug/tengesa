@@ -3,6 +3,7 @@ import 'package:tengesa/ui/home_screen/home_screen.dart';
 import 'dart:async';
 
 import 'package:tengesa/ui/login_screen/login_screen.dart';
+import 'package:tengesa/ui/main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (_statusCode == 201) {
       //If the user is authenticated then
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+          .pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()/*HomeScreen()*/));
     } else {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => LoginScreen()));

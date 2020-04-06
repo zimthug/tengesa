@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tengesa/ui/home_screen/home_screen.dart';
+import 'package:tengesa/ui/sale_screen/sale_screen.dart';
 
 class BottomNavigator extends StatefulWidget {
   @override
@@ -14,6 +16,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     int currentTabIndex = 0;
     List<Widget> tabs = [
       HomeScreen(),
+      SaleScreen(),
       HomeScreen(),
       HomeScreen(),
     ];
@@ -25,7 +28,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
       });
     }
 
-    return BottomNavigationBar(
+    return CupertinoTabBar(
       onTap: onTapped,
       currentIndex: currentTabIndex,
       items: [
@@ -34,32 +37,43 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             Icons.home,
             color: Colors.redAccent,
           ),
-          title: Text(
+          title: new Container(height: 0.0),/*Text(
             "Home",
             style: TextStyle(
                 fontWeight: FontWeight.w700, color: Colors.blueAccent),
+          ),*/
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.shopping_basket,
+            color: Colors.blueAccent,
           ),
+          title: new Container(height: 0.0),/*Text(
+            "Stock",
+            style:
+                TextStyle(fontWeight: FontWeight.w700, color: Colors.redAccent),
+          ),*/
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.shop,
             color: Colors.greenAccent,
           ),
-          title: Text(
+          title: new Container(height: 0.0),/*Text(
             "Stock",
             style:
                 TextStyle(fontWeight: FontWeight.w700, color: Colors.redAccent),
-          ),
+          ),*/
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.table_chart,
             color: Colors.orangeAccent,
           ),
-          title: Text(
+          title: new Container(height: 0.0), /*Text(
             "Report",
             style: TextStyle(fontWeight: FontWeight.w700, color: Colors.greenAccent),
-          ),
+          ),*/
         ),
       ],
     );

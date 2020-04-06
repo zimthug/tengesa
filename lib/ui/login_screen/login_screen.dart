@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tengesa/ui/home_screen/home_screen.dart';
+import 'package:tengesa/ui/main_screen.dart';
+import 'package:tengesa/ui/sale_screen/sale_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -48,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         onPressed: () {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => HomeScreen()));
+              MaterialPageRoute(builder: (context) => MainScreen()/*HomeScreen()*/));
         },
         padding: EdgeInsets.all(12),
         color: Colors.lightBlueAccent,

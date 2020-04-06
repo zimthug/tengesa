@@ -32,9 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Future.value(true);
   }
 
+/*
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
+    return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
         key: _scaffoldkey,
@@ -48,6 +49,15 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Icon(Icons.add),
         ),
       ),
+    );
+  }
+  */
+
+  @override
+  Widget build(BuildContext context) {
+    
+    return Scaffold(
+      body: _body(),
     );
   }
 

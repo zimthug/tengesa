@@ -12,10 +12,10 @@ class _SaleScreenState extends State<SaleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar.getAppBar(context),
-        drawer: NavigationDrawer(),
+      //appBar: MyAppBar.getAppBar(context),
+        //drawer: NavigationDrawer(),
         body: Container(),
-        bottomNavigationBar: BottomNavigator(),
+        //bottomNavigationBar: BottomNavigator(),
     );
   }
 }
