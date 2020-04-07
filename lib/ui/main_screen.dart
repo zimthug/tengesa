@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tengesa/ui/reports_screen/reports_home_screen.dart';
 import 'package:tengesa/ui/sale_screen/sale_screen.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
 import 'package:tengesa/ui/home_screen/home_screen.dart';
 import 'package:tengesa/ui/shared/bottom_navigator.dart';
 import 'package:tengesa/ui/shared/navigation_drawer.dart';
+import 'package:tengesa/ui/stocks_screen/stocks_screen.dart';
 import 'package:tengesa/utils/strings.dart';
 
 class MainScreen extends StatefulWidget {
@@ -57,11 +59,11 @@ class _MainScreenState extends State<MainScreen> {
             ),
             Container(
               color: Colors.white,
-              child: HomeScreen(),
+              child: StocksScreen(),
             ),
             Container(
               color: Colors.white,
-              child: HomeScreen(),
+              child: ReportHomeScreen(),
             ),
           ],
           controller: pageController,

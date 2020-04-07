@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tengesa/ui/home_screen/home_screen.dart';
+import 'package:tengesa/ui/reports_screen/reports_home_screen.dart';
 import 'package:tengesa/ui/sale_screen/sale_screen.dart';
+import 'package:tengesa/ui/stocks_screen/stocks_screen.dart';
+import 'package:tengesa/utils/strings.dart';
 
 class BottomNavigator extends StatefulWidget {
   @override
@@ -17,63 +20,50 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     List<Widget> tabs = [
       HomeScreen(),
       SaleScreen(),
-      HomeScreen(),
-      HomeScreen(),
+      StocksScreen(),
+      ReportHomeScreen(),
     ];
     onTapped(int index) {
       setState(() {
-        currentTabIndex = index;
+        currentTabIndex = index;        
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => tabs[currentTabIndex]));
       });
     }
 
-    return CupertinoTabBar(
+    /*return CupertinoTabBar*/
+    return BottomNavigationBar(      
       onTap: onTapped,
       currentIndex: currentTabIndex,
+      type: BottomNavigationBarType.fixed,
       items: [
         BottomNavigationBarItem(
           icon: Icon(
             Icons.home,
-            color: Colors.redAccent,
+            color: Colors.blue,
           ),
-          title: new Container(height: 0.0),/*Text(
-            "Home",
-            style: TextStyle(
-                fontWeight: FontWeight.w700, color: Colors.blueAccent),
-          ),*/
+          title: Text(Strings.bnbhome), //new Container(height: 0.0),
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.shopping_basket,
-            color: Colors.blueAccent,
+            color: Colors.blue,
           ),
-          title: new Container(height: 0.0),/*Text(
-            "Stock",
-            style:
-                TextStyle(fontWeight: FontWeight.w700, color: Colors.redAccent),
-          ),*/
+          title: Text(Strings.bnbsale), //new Container(height: 0.0),
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.shop,
-            color: Colors.greenAccent,
+            color: Colors.blue,
           ),
-          title: new Container(height: 0.0),/*Text(
-            "Stock",
-            style:
-                TextStyle(fontWeight: FontWeight.w700, color: Colors.redAccent),
-          ),*/
+          title: Text(Strings.bnbstocks), //new Container(height: 0.0),
         ),
         BottomNavigationBarItem(
           icon: Icon(
             Icons.table_chart,
-            color: Colors.orangeAccent,
+            color: Colors.blue,
           ),
-          title: new Container(height: 0.0), /*Text(
-            "Report",
-            style: TextStyle(fontWeight: FontWeight.w700, color: Colors.greenAccent),
-          ),*/
+          title: Text(Strings.bnbreports), //new Container(height: 0.0),
         ),
       ],
     );

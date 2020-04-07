@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tengesa/ui/home_screen/home_screen.dart';
 import 'package:tengesa/ui/login_screen/login_screen.dart';
+import 'package:tengesa/utils/strings.dart';
 
-class NavigationDrawer extends StatelessWidget{
-
+class NavigationDrawer extends StatelessWidget {
   NavigationDrawer() : super();
 
   @override
@@ -13,33 +13,9 @@ class NavigationDrawer extends StatelessWidget{
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: <Widget>[
-          new DrawerHeader(
-            child: new UserAccountsDrawerHeader(
-              accountName: new Text(
-                'Tengesa iPOS',
-                style: TextStyle(color: Colors.green, fontSize: 20),
-              ),
-              accountEmail: new Text(
-                'example@email.com',
-                style: TextStyle(color: Colors.green),
-              ),
-              decoration: new BoxDecoration(
-                image: new DecorationImage(
-                  image: new ExactAssetImage('assets/images/wallpaper.jpeg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://randomuser.me/api/portraits/men/46.jpg"),
-              ),
-            ),
-          ),
-          //decoration: new BoxDecoration(color: Colors.red),
-
           ListTile(
-            leading: Icon(Icons.info),
-            title: Text('My Page'),
+            leading: Icon(Icons.person),
+            title: Text('My Profile'),
             onTap: () {
               // Update the state of the app
               // ...
@@ -48,7 +24,7 @@ class NavigationDrawer extends StatelessWidget{
             },
           ),
           ListTile(
-            leading: Icon(Icons.hotel),
+            leading: Icon(Icons.store_mall_directory),
             title: Text('Manage Shop'),
             onTap: () {
               // Update the state of the app
@@ -64,7 +40,7 @@ class NavigationDrawer extends StatelessWidget{
             },
           ),
           ListTile(
-            leading: Icon(Icons.shopping_basket),
+            leading: Icon(Icons.settings),
             title: Text('Settings'),
             onTap: () {
               // Update the state of the app
@@ -74,7 +50,7 @@ class NavigationDrawer extends StatelessWidget{
             },
           ),
           ListTile(
-            leading: Icon(Icons.mic),
+            leading: Icon(Icons.all_out),
             title: Text('Sign Out'),
             onTap: () {
               Navigator.of(context).push(

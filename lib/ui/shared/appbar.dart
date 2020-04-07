@@ -15,7 +15,7 @@ class MyAppBar {
       backgroundColor: Colors.lightBlue,
       title: Text(
         Strings.appName,
-        style: TextStyle(fontFamily: 'Lobster', fontSize: 28),
+        style: TextStyle(fontFamily: 'Raleway', fontSize: 20),
       ),      
       actions: <Widget>[
         new Padding(

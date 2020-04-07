@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Future.value(true);
   }
 
-/*
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -46,18 +45,9 @@ class _HomeScreenState extends State<HomeScreen> {
         floatingActionButton: FloatingActionButton(
           onPressed: null,
           tooltip: 'New Sale',
-          child: Icon(Icons.add),
+          child: Icon(Icons.shopping_basket),
         ),
       ),
-    );
-  }
-  */
-
-  @override
-  Widget build(BuildContext context) {
-    
-    return Scaffold(
-      body: _body(),
     );
   }
 
@@ -123,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(fontFamily: 'Raleway'),
                     ),
                     Material(
-                      color: Colors.deepPurple,
+                      color: Colors.blue,
                       shape: StadiumBorder(),
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
@@ -184,6 +174,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  
 }

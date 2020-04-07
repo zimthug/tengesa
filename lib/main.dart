@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Oxygen',
-        primarySwatch: Colors.lightBlue,
+        primarySwatch: Colors.blue,
       ),
       home: SplashScreen(),
     );

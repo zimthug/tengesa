@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
 import 'package:tengesa/ui/shared/bottom_navigator.dart';
 
-class ReportHomeScreen extends StatefulWidget {
+class StocksScreen extends StatefulWidget {
   @override
-  _ReportHomeScreenState createState() => _ReportHomeScreenState();
+  _StocksScreenState createState() => _StocksScreenState();
 }
 
-class _ReportHomeScreenState extends State<ReportHomeScreen> {
+class _StocksScreenState extends State<StocksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar.getAppBar(context),
-      body: Text("Reports Screen"),
+      body: Text("Stocks Screen"),
       bottomNavigationBar: BottomNavigator(),
     );
   }

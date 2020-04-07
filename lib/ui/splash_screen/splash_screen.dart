@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (_statusCode == 201) {
       //If the user is authenticated then
       Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()/*HomeScreen()*/));
+          .pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
     } else {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => LoginScreen()));

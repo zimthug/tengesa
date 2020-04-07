@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         onPressed: () {
           Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MainScreen()/*HomeScreen()*/));
+              MaterialPageRoute(builder: (context) => HomeScreen()));
         },
         padding: EdgeInsets.all(12),
         color: Colors.lightBlueAccent,
