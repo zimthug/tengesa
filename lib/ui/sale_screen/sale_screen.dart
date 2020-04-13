@@ -16,7 +16,7 @@ class _SaleScreenState extends State<SaleScreen> {
   @override
   void initState() {
     super.initState();
-    _saveData();
+    //_saveData();
   }
 
   Future<List<Category>> _futureCat;
@@ -25,6 +25,7 @@ class _SaleScreenState extends State<SaleScreen> {
 
   StreamController<int> streamController = new StreamController<int>();
 
+   /*
   _saveData() async {
     Category cat1 = Category(10, 1001, 'Grocery');
 
@@ -42,6 +43,7 @@ class _SaleScreenState extends State<SaleScreen> {
     await db.saveData(cat4);
     await db.saveData(cat5);
   }
+  */
 
   @override
   Widget build(BuildContext context) {

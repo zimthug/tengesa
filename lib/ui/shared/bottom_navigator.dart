@@ -25,7 +25,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     ];
     onTapped(int index) {
       setState(() {
-        currentTabIndex = index;        
+        currentTabIndex = index;
+        //Navigator.pop(context);
         Navigator.of(context).push(
             MaterialPageRoute(builder: (context) => tabs[currentTabIndex]));
       });

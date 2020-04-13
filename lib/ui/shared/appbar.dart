@@ -27,7 +27,6 @@ class MyAppBar {
               onTap: () {
                 Navigator.of(context).push(
                   new MaterialPageRoute(
-                      //builder: (BuildContext context) => new CartItems(),
                       builder: (BuildContext context) => new SaleScreen(),
                       ),
                 );

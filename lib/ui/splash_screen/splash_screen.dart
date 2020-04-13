@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:tengesa/ui/login_screen/login_screen.dart';
 import 'package:tengesa/ui/main_screen.dart';
+import 'package:tengesa/utils/strings.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -40,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/images/splash.jpg'), fit: BoxFit.cover),
+              image: AssetImage('assets/images/nsplash.png'), fit: BoxFit.cover),
         ),
         child: Center(
           child: Stack(
@@ -50,21 +51,21 @@ class _SplashScreenState extends State<SplashScreen> {
                 padding: EdgeInsets.all(5.0),
                 alignment: Alignment.center,
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                 ),
               ),
               Container(
-                padding: EdgeInsets.all(5.0),
+                padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 30.0),  //.all(5.0),
                 alignment: Alignment.bottomCenter,
                 child: Text(
-                  //Constants.APP_FULL_NAME,
-                  "Tengesa iPOS",
+                  Strings.appName,
                   style: TextStyle(
                       fontSize: 28.0,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.redAccent),
+                      fontWeight: FontWeight.w800,
+                      color: Colors.red,
+                      fontFamily: "Lobster"),
                 ),
-              ),
+              ),              
             ],
           ),
         ),
