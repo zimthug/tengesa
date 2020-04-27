@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:tengesa/model/state/cart_state.dart';
 import 'package:tengesa/ui/splash_screen/splash_screen.dart';
 import 'package:tengesa/utils/strings.dart';
 
@@ -14,7 +12,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Oxygen',
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blue.shade900,
       ),
       home: SplashScreen(),
     );

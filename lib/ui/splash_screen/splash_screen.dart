@@ -39,33 +39,21 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/nsplash.png'), fit: BoxFit.cover),
-        ),
+        color: Colors.blue.shade900,
         child: Center(
-          child: Stack(
-            //mainAxisAlignment: MainAxisAlignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(5.0),
-                alignment: Alignment.center,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
-                ),
+              Text(
+                Strings.appName,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 42,
+                    fontStyle: FontStyle.italic,
+                    fontFamily: "Lobster"),
               ),
-              Container(
-                padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 30.0),  //.all(5.0),
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  Strings.appName,
-                  style: TextStyle(
-                      fontSize: 28.0,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.red,
-                      fontFamily: "Lobster"),
-                ),
-              ),              
+              SizedBox(height: 30),
+              Icon(Icons.access_time, color: Colors.deepOrange,)
             ],
           ),
         ),
