@@ -7,6 +7,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tengesa/model/category.dart';
 import 'package:tengesa/model/category_products.dart';
+import 'package:tengesa/model/currency.dart';
+import 'package:tengesa/model/product.dart';
+import 'package:tengesa/model/product_measure.dart';
 
 class DbManager {
   static final DbManager _instance = new DbManager.internal();
@@ -90,7 +93,8 @@ class DbManager {
   Future<List<Category>> getCategoryData() async {
     var dbClient = await db;
     String sql;
-    sql = "SELECT * FROM categories";
+    sql =
+        "SELECT * FROM categories WHERE category IS NOT NULL ORDER BY category";
 
     var result = await dbClient.rawQuery(sql);
     if (result.length == 0) return null;
@@ -103,28 +107,71 @@ class DbManager {
     return list;
   }
 
-  Future<List<CategoryProducts>> getCategoryWithProductCount(int branchId) async {
+  Future<List<ProductMeasure>> getUnitMeasureData() async {
     var dbClient = await db;
     String sql;
-    sql = """select c.category_id, IFNULL(category, 'XX') AS category, (select count(*) from products p 
+    sql = "SELECT * FROM product_measures ORDER BY product_measure";
+
+    var result = await dbClient.rawQuery(sql);
+    if (result.length == 0) return null;
+
+    List<ProductMeasure> list = result.map((item) {
+      return ProductMeasure.fromMap(item);
+    }).toList();
+
+    return list;
+  }
+
+  Future<List<CategoryProducts>> getCategoryWithProductCount(
+      int branchId) async {
+    var dbClient = await db;
+    String sql;
+    sql =
+        """select c.category_id, IFNULL(category, 'XX') AS category, (select count(*) from products p 
               where p.category_id = c.category_id) as products from categories c
               where c.branch_id = ?""";
 
     var result = await dbClient.rawQuery(sql, [branchId]);
     if (result.length == 0) {
-      print("No data so we are trying someting");
       return null;
     }
-
-    //print("Data available");
-    print(result);
 
     List<CategoryProducts> list = result.map((item) {
       return CategoryProducts.fromMap(item);
     }).toList();
 
-    print("Data available");
-    print(list);
+    return list;
+  }
+
+  Future<List<ProductDetails>> getProductsDetails(productId, categoryId) async {
+    var dbClient = await db;
+    String sql;
+    sql = """select pr.*, ct.category, cast(min_stock as double) as min_stock, 
+              cast(max_stock as double) as max_stock, cast(current_stock as double) as current_stock, 
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 501) as rtgs, 
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 502) as ecocash,
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 503) as usd
+            from products pr left outer join 
+            categories ct on pr.category_id = ct.category_id left outer join
+            product_stocks ps on pr.product_id = ps.product_id""";
+            
+            /*where pr.product_id = IFNULL(?, pr.product_id)
+             and pr.category_id = IFNULL(?, pr.category_id)""";*/
+
+    var result = await dbClient.rawQuery(sql);
+    if (result.length == 0) {
+      return null;
+    }
+
+    List<ProductDetails> list = result.map((item) {
+      return ProductDetails.fromMap(item);
+    }).toList();
 
     return list;
   }
@@ -145,5 +192,86 @@ class DbManager {
 
     var result = await dbClient.rawQuery(sql);
     return Sqflite.firstIntValue(result);
+  }
+
+  Future<int> getMaxProductId() async {
+    var dbClient = await db;
+    String sql;
+    sql = "SELECT IFNULL(MAX(product_id), 7000001) FROM products";
+
+    var result = await dbClient.rawQuery(sql);
+    return Sqflite.firstIntValue(result);
+  }
+
+  Future<void> intializeDatabase() {
+    print("Adding currencies");
+    Currency currency1 = Currency(501, "Zim RTGS", "RTGS\$", "RTGS\S");
+    Currency currency2 = Currency(502, "Ecocash", "RTGS\$", "RTGS\S");
+    Currency currency3 = Currency(503, "USD", "USD", "\S");
+
+    saveCurrencyData(currency1);
+    saveCurrencyData(currency2);
+    saveCurrencyData(currency3);
+
+    print("Adding product_measures");
+    ProductMeasure prod1 = ProductMeasure(201, "L", "Litre");
+    ProductMeasure prod2 = ProductMeasure(202, "ML", "Millilitre");
+    ProductMeasure prod3 = ProductMeasure(203, "KG", "Kilogram");
+    ProductMeasure prod4 = ProductMeasure(204, "G", "Milligram");
+    ProductMeasure prod5 = ProductMeasure(205, "M", "Metre");
+    ProductMeasure prod6 = ProductMeasure(206, "CM", "Centimeter");
+    ProductMeasure prod7 = ProductMeasure(207, "U", "Unit");
+
+    saveProductMeasureData(prod1);
+    saveProductMeasureData(prod2);
+    saveProductMeasureData(prod3);
+    saveProductMeasureData(prod4);
+    saveProductMeasureData(prod5);
+    saveProductMeasureData(prod6);
+    saveProductMeasureData(prod7);
+  }
+
+  Future<int> saveCurrencyData(Currency currency) async {
+    var dbClient = await db;
+    int res = await dbClient.insert("currencies", currency.toMap());
+    return res;
+  }
+
+  Future<int> saveProductMeasureData(ProductMeasure productMeasure) async {
+    var dbClient = await db;
+    int res = await dbClient.insert("product_measures", productMeasure.toMap());
+    return res;
+  }
+
+  Future<int> saveProductData(Product product) async {
+    var dbClient = await db;
+    int res = await dbClient.insert("products", product.toMap());
+    return res;
+  }
+
+  Future<int> saveProductPrice(ProductPrice productPrice) async {
+    var dbClient = await db;
+    if (productPrice.productPriceId == -1) {
+      String sql =
+          "SELECT IFNULL(MAX(product_price_id), 1007281) FROM product_prices";
+      var result = await dbClient.rawQuery(sql);
+      productPrice.productPriceId = Sqflite.firstIntValue(result) + 1;
+    }
+
+    int res = await dbClient.insert("product_prices", productPrice.toMap());
+    return res;
+  }
+
+  Future<int> saveProductStock(ProductStock productStock) async {
+    var dbClient = await db;
+    if (productStock.productStockId == -1) {
+      String sql =
+          "SELECT IFNULL(MAX(product_stock_id), 3780010) FROM product_stocks";
+      var result = await dbClient.rawQuery(sql);
+      productStock.productStockId = Sqflite.firstIntValue(result) + 1;
+    }
+
+    int res = await dbClient.insert("product_stocks", productStock.toMap());
+    return res;
   }
 }

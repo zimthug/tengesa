@@ -26,7 +26,7 @@ class _CategoriesTabState extends State<CategoriesTab> {
   Future<List<CategoryProducts>> _futureCategories;
   //StreamController<int> streamController = new StreamController<int>();
 
-  _getData() {
+  Future<void> _getData() {
     _futureCategories = db.getCategoryWithProductCount(1001);
   }
 
@@ -76,25 +76,8 @@ class _CategoriesTabState extends State<CategoriesTab> {
                   return Text('Error ${snapshot.error}');
                 }
                 if (snapshot.hasData) {
-                  //return Container();
-                  //streamController.sink.add(snapshot.data.length);
-                  return ListView(
-                    children: snapshot.data
-                        .map((categoryProduct) => ListTile(
-                              title: Text(categoryProduct.category),
-                              subtitle:
-                                  Text(categoryProduct.categoryId.toString()),
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.red,
-                                child: Text(categoryProduct.products.toString(),
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                    )),
-                              ),
-                            ))
-                        .toList(),
-                  );
+                  return _catgoriesListView(snapshot);
+                  //streamController.sink.add(snapshot.data.length);                  
                 }
                 if (!snapshot.hasData) {
                   return Center(
@@ -117,6 +100,44 @@ class _CategoriesTabState extends State<CategoriesTab> {
         ],
       ),
     );
+  }
+
+  Widget _catgoriesListView(AsyncSnapshot<List<CategoryProducts>> snapshot) {
+    return RefreshIndicator(      
+        onRefresh: _getData,
+        child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: snapshot.data.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width / 1.4,
+                      height: 50,
+                      child: ListTile(
+                        title: Text(
+                          snapshot.data[index].category,
+                          style: TextStyle(fontWeight: FontWeight.w800,  ),
+                        ),
+                        subtitle: snapshot.data[index].products > 0 ? Text("No Products") : 
+                        Text(snapshot.data[index].products.toString() + " Products"),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.grey.shade400,
+                          child: Text(
+                            snapshot.data[index].products.toString(),
+                            style: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }));
   }
 
   showCategoryDialog() {

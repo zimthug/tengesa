@@ -50,16 +50,16 @@ class _StocksScreenState extends State<StocksScreen>
               Container(
                 child: Column(
                   children: <Widget>[
-                    Padding(
+                    /*Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
                         "Stock Manager",
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w700),
                       ),
-                    ),
+                    ),*/
                     Padding(
-                      padding: EdgeInsets.all(15),
+                      padding: EdgeInsets.all(5),
                       child: Form(
                         key: _key,
                         autovalidate: _validate,
@@ -107,16 +107,17 @@ class _StocksScreenState extends State<StocksScreen>
               ],
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-              height: 400,              
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              height: 420,
               child: TabBarView(
                 controller: tabController,
+                physics: NeverScrollableScrollPhysics(),
                 children: <Widget>[
                   ProductsTab(),
                   CategoriesTab(),
                 ],
               ),
-            ),
+            ),            
           ],
         ),
       ),
