@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:tengesa/ui/shared/appbar.dart';
-import 'package:tengesa/ui/shared/bottom_navigator.dart';
 import 'package:tengesa/ui/stocks_screen/categories_tab.dart';
 import 'package:tengesa/ui/stocks_screen/products_tab.dart';
 import 'package:tengesa/utils/database/db_manager.dart';
@@ -16,7 +14,6 @@ class StocksScreen extends StatefulWidget {
 class _StocksScreenState extends State<StocksScreen>
     with TickerProviderStateMixin {
   int countCats;
-  bool _saleInProgress = true;
   bool _validate = false;
   DbManager db = DbManager();
   GlobalKey<FormState> _key = new GlobalKey();
@@ -26,16 +23,14 @@ class _StocksScreenState extends State<StocksScreen>
   @override
   void initState() {
     super.initState();
-    _saleInProgress = true;
-    //size = MediaQuery.of(context).size;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar.getAppBar(context),
+      //appBar: MyAppBar.getAppBar(context),
       body: _body(),
-      bottomNavigationBar: BottomNavigator(),
+      //bottomNavigationBar: BottomNavigator(),
     );
   }
 

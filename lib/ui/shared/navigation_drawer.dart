@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tengesa/ui/home_screen/home_screen.dart';
-import 'package:tengesa/ui/login_screen/login_screen.dart';
 import 'package:tengesa/utils/strings.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -9,70 +7,89 @@ class NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text('My Profile'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.store_mall_directory),
-            title: Text('Manage Shop'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return HomeScreen();
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: new Text(Strings.appName),
+              accountEmail: null,
+              currentAccountPicture: CircleAvatar(
+                child: Icon(Icons.beach_access,
+                    color: Colors.redAccent,
+                    size: 30), //Image.asset("assets/images/logo.png"),
+                backgroundColor: Colors.white,
+              ),
+            ),
+            Column(
+              children: <Widget>[
+                ListTile(
+                  leading: new Icon(Icons.account_box,
+                      color: Theme.of(context).accentColor),
+                  title: new Text("Account"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    /*Navigator.of(context)
+                              .push(new MaterialPageRoute(builder: (context) {
+                            return Settings();
+                          }));*/
                   },
                 ),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.all_out),
-            title: Text('Sign Out'),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return LoginScreen();
+                ListTile(
+                  leading: new Icon(Icons.settings,
+                      color: Theme.of(context).accentColor),
+                  title: new Text("Settings"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    /*Navigator.of(context)
+                              .push(new MaterialPageRoute(builder: (context) {
+                            return Settings();
+                          }));*/
                   },
                 ),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.mic),
-            title: Text('About'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
-            },
-          ),
-        ],
+                ListTile(
+                  leading: new Icon(Icons.info,
+                      color: Theme.of(context).accentColor),
+                  title: new Text("About"),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    /*Navigator.push(context,
+                            new MaterialPageRoute(builder: (context) {
+                              return new About();
+                            }));*/
+                  },
+                ),
+                Divider(
+                  thickness: 2,
+                ),
+                ListTile(
+                      leading: Icon(Icons.share,
+                          color: Theme
+                              .of(context)
+                              .accentColor),
+                      title: Text("Share"),
+                      onTap: () {
+                        //Share.share(
+                        //    "Hey, checkout this cool music player at https://play.google.com/store/apps/details?id=com.onedreamers.musicplayer");
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    new ListTile(
+                      leading: Icon(Icons.star,
+                          color: Theme
+                              .of(context)
+                              .accentColor),
+                      title: Text("Rate the app"),
+                      onTap: () {
+                        Navigator.of(context).pop();
+
+                        //launchUrl(
+                        //    "https://play.google.com/store/apps/details?id=com.onedreamers.musicplayer");
+                      },
+                    ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

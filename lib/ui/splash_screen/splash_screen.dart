@@ -27,8 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
   onDoneLoading() async {
     if (_statusCode == 201) {
       //If the user is authenticated then
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomeScreen()));
     } else {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => LoginScreen()));
@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fontFamily: "Lobster"),
               ),
               SizedBox(height: 30),
-              Icon(Icons.access_time, color: Colors.deepOrange,)
+              Icon(Icons.beach_access, color: Colors.redAccent, size: 30),
             ],
           ),
         ),

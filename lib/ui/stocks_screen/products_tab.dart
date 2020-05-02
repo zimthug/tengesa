@@ -16,9 +16,7 @@ class _ProductsTabState extends State<ProductsTab> {
     getProductDetailsData();
   }
 
-  bool _validate = false;
   DbManager db = DbManager();
-  GlobalKey<FormState> _key = new GlobalKey();
   Future<List<ProductDetails>> _futureProductDetails;
 
   @override
@@ -27,7 +25,7 @@ class _ProductsTabState extends State<ProductsTab> {
       child: Column(
         children: [
           Card(
-            elevation: 4.0,
+            elevation: 8.0,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -56,9 +54,8 @@ class _ProductsTabState extends State<ProductsTab> {
                         ),
                         onPressed: () {
                           //showProductDialog();
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => EditProductScreen()));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => EditProductScreen()));
                         },
                       ),
                     ],
@@ -115,6 +112,7 @@ class _ProductsTabState extends State<ProductsTab> {
                 child: Container(
                   decoration: BoxDecoration(color: Colors.grey.shade100),
                   child: ListTile(
+                    isThreeLine: true,
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                     leading: Container(
@@ -133,41 +131,50 @@ class _ProductsTabState extends State<ProductsTab> {
                       snapshot.data[index].product,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Row(children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            "ZW\$" + snapshot.data[index].rtgs.toString(),
-                            style: TextStyle(
-                              color: Colors.teal,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                    subtitle: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child:                            Text(
+                              "ZW\$ " + snapshot.data[index].rtgs.toString(),
+                              style: TextStyle(
+                                color: Colors.teal,
+                                fontSize: 12,
+                              ),
+                            ),),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Text(
+                                "US\$ " + snapshot.data[index].usd.toString(),
+                                style: TextStyle(
+                                  color: Colors.orangeAccent,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 10.0),
-                          Text(
-                            "Eco\$" +
-                                snapshot.data[index].ecocash.toString(),
-                            style: TextStyle(
-                              color: Colors.orangeAccent,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              "Ecocash\$ " +
+                                  snapshot.data[index].ecocash.toString(),
+                              style: TextStyle(
+                                color: Colors.purpleAccent,
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 10.0),
-                          Text(
-                            "US\$" + snapshot.data[index].usd.toString(),
-                            style: TextStyle(
-                              color: Colors.purpleAccent,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ]),
+                          ],
+                        ),
+                      ],
+                    ),
                     trailing:
-                        Icon(Icons.keyboard_arrow_right, color: Colors.blue),
+                        Icon(Icons.keyboard_arrow_right, color: Colors.blue, size: 30),
                   ),
                 ),
               ),

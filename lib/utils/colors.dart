@@ -13,6 +13,8 @@ class AppColors {
     Colors.blue.shade900
   ];
 
+  static Color primaryColor = Colors.blue.shade900;
+
   //randomcolor
   static final Random _random = new Random();
 

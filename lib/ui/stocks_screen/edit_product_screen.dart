@@ -38,7 +38,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return Scaffold(
       appBar: MyAppBar.getAppBar(context),
       body: _buildBody(),
-      bottomNavigationBar: BottomNavigator(),
+      //bottomNavigationBar: BottomNavigator(),
     );
   }
 
@@ -76,7 +76,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.words,
           maxLength: 15,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.blue.shade900),
           decoration: InputDecoration(
             icon: Icon(Icons.lock_open),
             labelStyle: TextStyle(fontWeight: FontWeight.w300),
@@ -109,7 +109,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           children: <Widget>[
             Text("Stocks",
                 style: TextStyle(
-                    color: Colors.blue,
+                    color: Colors.blue.shade900,
                     fontWeight: FontWeight.bold,
                     fontSize: 16))
           ],
@@ -120,7 +120,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "Current",
@@ -136,7 +136,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "Minimum",
@@ -152,7 +152,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "Maximum",
@@ -182,7 +182,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "RTGS\$",
@@ -198,7 +198,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "Ecocash",
@@ -214,7 +214,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "US\$",
