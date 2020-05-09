@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tengesa/model/sales_grid.dart';
 import 'package:tengesa/ui/sale_screen/make_sale_screen.dart';
 import 'package:tengesa/ui/widget/sales_gridlist_item.dart';
+import 'package:tengesa/ui/shared/appbar.dart';
 
 class SaleScreen extends StatefulWidget {
   @override
@@ -31,15 +32,15 @@ class _SaleScreenState extends State<SaleScreen> {
 
     List<SalesGrid> salesGrid = <SalesGrid>[
       SalesGrid("Sales", MakeSaleScreen(), "assets/images/shopping_cart.png"),
-      SalesGrid("Stocks", new Container(), "assets/images/shopping_bags.png"),
-      SalesGrid("Invoice", new Container(), "assets/images/page_with_curl.png"),
-      SalesGrid("Till Status", new Container(), "assets/images/moneybag.png"),
-      SalesGrid("Deliveries", new Container(), "assets/images/truck.png"),
-      SalesGrid("Reports", new Container(), "assets/images/ledger.png")
+      SalesGrid("Stocks", plcHldr(), "assets/images/shopping_bags.png"),
+      SalesGrid("Invoice", plcHldr(), "assets/images/page_with_curl.png"),
+      SalesGrid("Till Status", plcHldr(), "assets/images/moneybag.png"),
+      SalesGrid("Deliveries", plcHldr(), "assets/images/truck.png"),
+      SalesGrid("Reports", plcHldr(), "assets/images/ledger.png")
     ];
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 40, 10, 10),
+      padding: EdgeInsets.fromLTRB(10, 30, 10, 10),
       child: Column(
         children: <Widget>[
           Expanded(
@@ -76,5 +77,13 @@ class _SaleScreenState extends State<SaleScreen> {
         ],
       ),
     );
+  }
+  
+  Widget plcHldr(){
+    return Scaffold(
+	appBar: MyAppBar.getAppBar(context),
+      //drawer: NavigationDrawer(),
+      body: Container(),
+	);
   }
 }

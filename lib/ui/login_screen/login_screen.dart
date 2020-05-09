@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tengesa/model/user.dart';
 import 'package:tengesa/ui/main_screen.dart';
 import 'package:tengesa/ui/widget/wavy_header.dart';
+import 'package:tengesa/utils/database/db_manager.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -8,14 +11,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool _isError;
+  //bool _loggedIn;
   bool _validate = false;
   String _usernameField;
   String _passwordField;
+  DbManager db = DbManager();
   GlobalKey<FormState> _key = new GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    _isError = false;
+    //_loggedIn = false;
   }
 
   @override
@@ -27,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
             children: <Widget>[
               WavyHeaderText(),
               SizedBox(height: 20),
+              _isError ? errorCard() : Container(),
               Form(
                 key: _key,
                 autovalidate: _validate,
@@ -34,6 +43,19 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget errorCard() {
+    return Card(
+      elevation: 8.0,
+      child: Text(
+        "Invalid Username/ Password",
+        style: TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.w700,
         ),
       ),
     );
@@ -53,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               labelStyle: TextStyle(fontWeight: FontWeight.w300),
               labelText: "Username",
             ),
-            //validator: _productValidator,
+            validator: usernameValidator,
             onSaved: (String val) {
               _usernameField = val;
             },
@@ -67,7 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
               labelStyle: TextStyle(fontWeight: FontWeight.w300),
               labelText: "Password",
             ),
-            //validator: _productValidator,
             onSaved: (String val) {
               _passwordField = val;
             },
@@ -86,8 +107,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               color: Colors.blue.shade900,
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => MainScreen()));
+                loginUser().then((val) {
+                  //print("Data from function is " + val.toString());
+                  if (val) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => MainScreen(),
+                      ),
+                    );
+                  } else {
+                    setState(() {
+                      _isError = true;
+                    });
+                  }
+                });
               },
             ),
           ),
@@ -117,5 +150,40 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  Future<bool> loginUser() async {
+    if (_key.currentState.validate()) {
+      _key.currentState.save();
+
+      var userList = await db.findUserByUsername(_usernameField);
+      //print(userList);
+      if (userList == null) {
+        return false;
+      }
+
+      var user = userList[0];
+
+      if (user.password != _passwordField) {
+        return false;
+      }
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      //Set username and password
+      prefs.setString("tengesa.role", user.role);
+      prefs.setString("tengesa.username", user.username);
+      prefs.setInt("tengesa.branchId", user.branchId);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  String usernameValidator(String val) {
+    if (val.length < 2) {
+      return 'Username must be at least 2 characters';
+    }
   }
 }
