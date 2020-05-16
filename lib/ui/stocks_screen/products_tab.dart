@@ -38,9 +38,11 @@ class _ProductsTabState extends State<ProductsTab> {
                         icon: Icon(Icons.input),
                         color: Colors.grey[500],
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => EditProductScreen()));
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EditProductScreen(),
+                            ),
+                          );
                         },
                       ),
                       FlatButton(
@@ -139,13 +141,14 @@ class _ProductsTabState extends State<ProductsTab> {
                           children: <Widget>[
                             Align(
                               alignment: Alignment.topLeft,
-                              child:                            Text(
-                              "ZW\$ " + snapshot.data[index].rtgs.toString(),
-                              style: TextStyle(
-                                color: Colors.teal,
-                                fontSize: 12,
+                              child: Text(
+                                "ZW\$ " + snapshot.data[index].rtgs.toString(),
+                                style: TextStyle(
+                                  color: Colors.teal,
+                                  fontSize: 12,
+                                ),
                               ),
-                            ),),
+                            ),
                             Align(
                               alignment: Alignment.topRight,
                               child: Text(
@@ -173,8 +176,8 @@ class _ProductsTabState extends State<ProductsTab> {
                         ),
                       ],
                     ),
-                    trailing:
-                        Icon(Icons.keyboard_arrow_right, color: Colors.blue, size: 30),
+                    trailing: Icon(Icons.keyboard_arrow_right,
+                        color: Colors.blue, size: 30),
                   ),
                 ),
               ),

@@ -205,6 +205,38 @@ class DbManager {
     return list;
   }
 
+  Future<List<ProductDetails>> findProductsDetailsByName(String product) async {
+    var dbClient = await db;
+    String sql;
+    sql = """select pr.*, ct.category, cast(min_stock as double) as min_stock, 
+              cast(max_stock as double) as max_stock, cast(current_stock as double) as current_stock, 
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 501) as rtgs, 
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 502) as ecocash,
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 503) as usd
+            from products pr left outer join 
+            categories ct on pr.category_id = ct.category_id left outer join
+            product_stocks ps on pr.product_id = ps.product_id 
+              where upper(product) like '%'||?||'%' """;
+
+    var result = await dbClient.rawQuery(sql, [product.toUpperCase()]);
+	//print(result.toString());
+    if (result.length == 0) {
+      return null;
+    }
+
+    List<ProductDetails> list = result.map((item) {
+      return ProductDetails.fromMap(item);
+    }).toList();
+
+    return list;
+  }
+
   Future<int> checkCategoryExists(cat) async {
     var dbClient = await db;
     String sql;
@@ -262,9 +294,11 @@ class DbManager {
 
   Future<void> intializeTestUser() {
     /* This function is only used for testing */
-    print("Adding users");    
-    User u01 = User(10, "cashier@tengesa.co.zw", "cashier", "123654", "CASHIER", 10001, " ");
-    User u02 = User(50, "admin@tengesa.co.zw", "admin", "123654", "ADMIN", 10001, " ");
+    print("Adding users");
+    User u01 = User(10, "cashier@tengesa.co.zw", "cashier", "123654", "CASHIER",
+        10001, " ");
+    User u02 =
+        User(50, "admin@tengesa.co.zw", "admin", "123654", "ADMIN", 10001, " ");
     saveUserData(u01);
     saveUserData(u02);
   }
@@ -320,7 +354,7 @@ class DbManager {
   }
 
   Future<List<User>> findUserByUsername(String username) async {
-    var dbClient = await db;    
+    var dbClient = await db;
     String sql;
     sql = "SELECT * FROM users WHERE username = ?";
 

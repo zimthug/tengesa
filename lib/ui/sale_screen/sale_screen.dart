@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tengesa/model/sales_grid.dart';
-import 'package:tengesa/ui/sale_screen/make_sale_screen.dart';
+import 'package:tengesa/ui/sale_screen/sales/sales_list_screen.dart';
 import 'package:tengesa/ui/widget/sales_gridlist_item.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
 
@@ -31,7 +31,7 @@ class _SaleScreenState extends State<SaleScreen> {
     final double itemHeight = (size.height - kToolbarHeight - 24) / 4;
 
     List<SalesGrid> salesGrid = <SalesGrid>[
-      SalesGrid("Sales", MakeSaleScreen(), "assets/images/shopping_cart.png"),
+      SalesGrid("Sales", SalesListScreen(), "assets/images/shopping_cart.png"),
       SalesGrid("Stocks", plcHldr(), "assets/images/shopping_bags.png"),
       SalesGrid("Invoice", plcHldr(), "assets/images/page_with_curl.png"),
       SalesGrid("Till Status", plcHldr(), "assets/images/moneybag.png"),
@@ -78,12 +78,12 @@ class _SaleScreenState extends State<SaleScreen> {
       ),
     );
   }
-  
-  Widget plcHldr(){
+
+  Widget plcHldr() {
     return Scaffold(
-	appBar: MyAppBar.getAppBar(context),
+      appBar: MyAppBar.getAppBar(context),
       //drawer: NavigationDrawer(),
       body: Container(),
-	);
+    );
   }
 }

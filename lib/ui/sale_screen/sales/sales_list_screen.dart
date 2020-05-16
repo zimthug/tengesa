@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:tengesa/model/sales.dart';
+import 'package:tengesa/ui/sale_screen/sales/make_sale_screen.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
 import 'package:tengesa/ui/widget/search_widget.dart';
 import 'package:tengesa/utils/colors.dart';
 
-class MakeSaleScreen extends StatefulWidget {
+class SalesListScreen extends StatefulWidget {
   @override
-  _MakeSaleScreenState createState() => _MakeSaleScreenState();
+  _SalesListScreenState createState() => _SalesListScreenState();
 }
 
-class _MakeSaleScreenState extends State<MakeSaleScreen> {
+class _SalesListScreenState extends State<SalesListScreen> {
+  Sales sales;
+
+  
   @override
   Widget build(BuildContext context) {
+    //sales = {Sales(100, 1, "2020", "endDate", 501, 100, 10)};
     return Scaffold(
       appBar: MyAppBar.getAppBar(context),
-      //drawer: NavigationDrawer(),
       body: _buildBody(),
     );
   }
@@ -37,7 +42,12 @@ class _MakeSaleScreenState extends State<MakeSaleScreen> {
             ],
           ),
           SearchWidget(searchbarText: "Search..."),
-          SizedBox(height: 60),
+          /*SizedBox(height: 10,
+          child: Column(
+            children: <Widget> [
+              Text("No on going sale")
+            ]
+          ),),*/
           Expanded(
             child: Container(
               width: double.infinity,
@@ -67,16 +77,24 @@ class _MakeSaleScreenState extends State<MakeSaleScreen> {
                         borderRadius: BorderRadius.circular(40),
                         boxShadow: [
                           BoxShadow(
-                            offset: Offset(0, 4),
-                            blurRadius: 50,
-                            color: AppColors.primaryColor //.withOpacity(.1),
-                          ),
+                              offset: Offset(0, 4),
+                              blurRadius: 50,
+                              color: AppColors.primaryColor //.withOpacity(.1),
+                              ),
                         ],
                       ),
                       child: Row(
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        MakeSaleScreen(),
+                                  ),
+                                );
+                            },
                             child: Container(
                               padding: EdgeInsets.all(8),
                               height: 46,
@@ -85,7 +103,10 @@ class _MakeSaleScreenState extends State<MakeSaleScreen> {
                                 color: Colors.grey.shade300,
                                 borderRadius: BorderRadius.circular(30),
                               ),
-                              child: Icon(Icons.shopping_basket, color: Colors.deepOrange,),
+                              child: Icon(
+                                Icons.shopping_basket,
+                                color: Colors.deepOrange,
+                              ),
                             ),
                           ),
                           SizedBox(width: 30),
@@ -101,13 +122,21 @@ class _MakeSaleScreenState extends State<MakeSaleScreen> {
                                 child: Text(
                                   "New Sale",
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 18,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        MakeSaleScreen(),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ],
