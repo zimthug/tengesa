@@ -14,7 +14,7 @@ class _SearchWidgetState extends State<SearchWidget> {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      height: 50,
+      height: 40,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.grey.shade200, //Color(0xFFF5F5F7),

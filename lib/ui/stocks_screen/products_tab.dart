@@ -38,10 +38,11 @@ class _ProductsTabState extends State<ProductsTab> {
                         icon: Icon(Icons.input),
                         color: Colors.grey[500],
                         onPressed: () {
-                          Navigator.of(context).push(
+                          Navigator.of(context).pushAndRemoveUntil(
                             MaterialPageRoute(
                               builder: (context) => EditProductScreen(),
                             ),
+                            ModalRoute.withName("/"),
                           );
                         },
                       ),
