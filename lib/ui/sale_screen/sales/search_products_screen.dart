@@ -1,9 +1,9 @@
-//import 'package:flappy_search_bar/flappy_search_bar.dart';
-//import 'package:flappy_search_bar/search_bar_style.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:tengesa/model/product.dart';
-import 'package:tengesa/ui/widget/search_widget.dart';
+import 'package:tengesa/model/sales.dart';
+import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/utils/colors.dart';
 import 'package:tengesa/utils/database/db_manager.dart';
 
@@ -14,6 +14,7 @@ class SearchProductsScreen extends StatefulWidget {
 
 class _SearchProductsScreenState extends State<SearchProductsScreen> {
   String term;
+  Sales sales;
   DbManager db = DbManager();
   int _categoryFilter;
   List<DropdownMenuItem> _categoryItems = [];
@@ -30,6 +31,8 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    sales =
+        ScopedModel.of<SalesStateModel>(context, rebuildOnChange: true).sale;
     return Scaffold(
       body: Container(
         child: Column(
@@ -43,20 +46,24 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                 constraints:
                     BoxConstraints(minWidth: MediaQuery.of(context).size.width),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Container(
-                    height: 20,
-                    //color: Colors.white,
-                    child: TextField(
-                      controller: _textController,
-                      decoration: InputDecoration(
-                        hintText: 'Search Products...',
-                        icon: Icon(Icons.search),
+                  padding: EdgeInsets.all(20.0),
+                  child: TextField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                      hintText: 'Search Products',
+                      prefixIcon: Icon(Icons.search, size: 30.0),
+                      contentPadding: EdgeInsets.symmetric(vertical: 15.0),
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      onChanged: onItemChanged,
+                      suffixIcon:
+                          IconButton(icon: Icon(Icons.clear), onPressed: () {}),
                     ),
-                  ), //SearchWidget(searchbarText: "Search Products"),
-                ),
+                    onChanged: onItemChanged,
+                  ),
+                ), //SearchWidget(searchbarText: "Search Products"),
               ),
             ),
             Padding(
@@ -159,7 +166,7 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
             child: Text(
               "No Products Found",
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 18.0,
                 color: Colors.blue.shade600,
                 fontWeight: FontWeight.w800,
               ),
@@ -203,22 +210,26 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Text(
-                                "ZW\$ " + snapshot.data[index].rtgs.toString(),
+                                "ZW\$ " +
+                                    snapshot.data[index].rtgs
+                                        .toStringAsFixed(2), //toString(),
                                 style: TextStyle(
                                     color: Colors.blue,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                "US\$ " + snapshot.data[index].usd.toString(),
+                                "US\$ " +
+                                    snapshot.data[index].usd.toStringAsFixed(2),
                                 style: TextStyle(
                                     color: Colors.red,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                "Ecocash\$ " +
-                                    snapshot.data[index].ecocash.toString(),
+                                "Ecocash \$ " +
+                                    snapshot.data[index].ecocash
+                                        .toStringAsFixed(2),
                                 style: TextStyle(
                                     color: Colors.purple,
                                     fontSize: 12,
@@ -235,7 +246,8 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                             height: 10,
                           ),
                           Text(
-                            snapshot.data[index].currentStock.toString(),
+                            snapshot.data[index].currentStock
+                                .toStringAsFixed(0),
                             style: TextStyle(fontWeight: FontWeight.w700),
                           ),
                         ],
@@ -245,7 +257,28 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                 ),
               ),
               onTap: () {
-                print("Picked " + snapshot.data[index].product);
+                double price;
+                if (sales.currencyId == 501) {
+                  price = snapshot.data[index].rtgs;
+                } else if (sales.currencyId == 502) {
+                  price = snapshot.data[index].ecocash;
+                } else if (sales.currencyId == 503) {
+                  price = snapshot.data[index].usd;
+                }
+
+                SaleItems saleItems = SaleItems(
+                    -1,
+                    sales.saleId,
+                    snapshot.data[index].productId,
+                    1,
+                    price,
+                    sales.currencyId,
+                    price);
+
+                ScopedModel.of<SalesStateModel>(context).addProduct(saleItems);
+
+                
+                
               },
             );
           }),

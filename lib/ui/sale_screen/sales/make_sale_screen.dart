@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:tengesa/model/sales.dart';
+import 'package:tengesa/model/state/sales_state.dart';
+import 'package:tengesa/ui/sale_screen/sales/barcode_scan_screen.dart';
 import 'package:tengesa/ui/sale_screen/sales/sale_products_screen.dart';
 import 'package:tengesa/ui/sale_screen/sales/search_products_screen.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
@@ -15,6 +19,7 @@ PageController pageController;
 class _MakeSaleScreenState extends State<MakeSaleScreen>
     with SingleTickerProviderStateMixin {
   int _page = 0;
+  
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
 
   @override
@@ -24,7 +29,7 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -43,7 +48,7 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
                 color: Colors.white,
                 //child: SaleScreen(),
                 child: Container(
-                  child: Text("Two"),
+                  child: BarcodeScanScreen(),//Text("Two"),
                 )),
             Container(
               color: Colors.white,

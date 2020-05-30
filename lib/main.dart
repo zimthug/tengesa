@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/ui/splash_screen/splash_screen.dart';
 import 'package:tengesa/utils/colors.dart';
 import 'package:tengesa/utils/strings.dart';
@@ -6,8 +8,7 @@ import 'package:tengesa/utils/strings.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
-static Map<int, Color> color = {
+  static Map<int, Color> color = {
     50: AppColors.primaryColor,
     100: AppColors.primaryColor,
     200: AppColors.primaryColor,
@@ -24,14 +25,17 @@ static Map<int, Color> color = {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: Strings.appName,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Oxygen',
-        primarySwatch: primaryColor,
+    return ScopedModel<SalesStateModel>(
+      model: SalesStateModel(),
+      child: MaterialApp(
+        title: Strings.appName,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Oxygen',
+          primarySwatch: primaryColor,
+        ),
+        home: SplashScreen(),
       ),
-      home: SplashScreen(),
     );
   }
 }

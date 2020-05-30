@@ -8,8 +8,5 @@ class Funcs{
     return DateFormat("dd/mm/yyyy HH:mm:ss").format(now);
   }
 
-  static DateTime strToDate(String strDate){
-    
-    
-  }
+  
 }

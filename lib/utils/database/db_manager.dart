@@ -369,4 +369,30 @@ class DbManager {
 
     return list;
   }
+
+  Future<int> getMaxSaleId() async {
+    var dbClient = await db;
+    String sql;
+    sql = "SELECT IFNULL(MAX(sale_id), 300001) FROM sales";
+
+    var result = await dbClient.rawQuery(sql);
+    return Sqflite.firstIntValue(result);
+  }
+
+  Future<List<Currency>> getCurrencyData() async {
+    var dbClient = await db;
+    String sql;
+    sql =
+        "SELECT * FROM currencies ORDER BY currency";
+
+    var result = await dbClient.rawQuery(sql);
+    if (result.length == 0) return null;
+
+    List<Currency> list = result.map((item) {
+      return Currency.fromMap(item);
+    }).toList();
+
+    return list;
+  }
+
 }

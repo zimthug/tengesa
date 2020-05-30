@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/ui/sale_screen/sales/make_sale_screen.dart';
 import 'package:tengesa/ui/sale_screen/sales/sales_list_screen.dart';
 
@@ -62,34 +64,35 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
           ),
         ),
         _buildTile(
-          Colors.red,
-          Padding(
-            padding: EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: Icon(Icons.shopping_cart,
-                      size: 40, color: Colors.blueAccent.shade400),
-                  height: 80,
-                ),
-                Text(
-                  "New Sale",
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blueAccent),
-                ),
-              ],
-            ),
-          ),
-          onTap: () => Navigator.of(context).push(
+            Colors.red,
+            Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: Icon(Icons.shopping_cart,
+                        size: 40, color: Colors.blueAccent.shade400),
+                    height: 80,
+                  ),
+                  Text(
+                    "New Sale",
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blueAccent),
+                  ),
+                ],
+              ),
+            ), onTap: () {
+          ScopedModel.of<SalesStateModel>(context).addSale();
+          Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => MakeSaleScreen(),
             ),
-          ),
-        ),
+          );
+        }),
         _buildTile(
           Colors.purple,
           Padding(
