@@ -19,7 +19,7 @@ PageController pageController;
 class _MakeSaleScreenState extends State<MakeSaleScreen>
     with SingleTickerProviderStateMixin {
   int _page = 0;
-  
+
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
 
   @override
@@ -29,7 +29,7 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
   }
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -40,20 +40,23 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
         bottomNavigationBar: saleBottomNavigationBar(),
         body: PageView(
           children: [
-            Container(
-              color: Colors.white,
-              child: SaleProductsScreen()
-            ),
+            Container(color: Colors.white, child: SaleProductsScreen()),
             Container(
                 color: Colors.white,
                 //child: SaleScreen(),
                 child: Container(
-                  child: BarcodeScanScreen(),//Text("Two"),
+                  child: BarcodeScanScreen(), //Text("Two"),
                 )),
             Container(
               color: Colors.white,
               child: Container(
-                child: SearchProductsScreen(),
+                child: SearchProductsScreen(
+                  onButtonPressed: () => pageController.animateToPage(
+                    0,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.linear,
+                  ),
+                ),
               ),
             ),
             Container(
@@ -124,7 +127,8 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
             GestureDetector(
               child: Container(
                 width: MediaQuery.of(context).size.width / 5,
-                child: Icon(FontAwesomeIcons.barcode/*Icons.scanner*/, size: 35.0, color: Colors.white),
+                child: Icon(FontAwesomeIcons.barcode /*Icons.scanner*/,
+                    size: 35.0, color: Colors.white),
               ),
               onTap: () {
                 navigationTapped(1);
@@ -143,7 +147,8 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
             GestureDetector(
               child: Container(
                 width: MediaQuery.of(context).size.width / 5,
-                child: Icon(FontAwesomeIcons.clipboard /*Icons.note_add*/, size: 35.0, color: Colors.white),
+                child: Icon(FontAwesomeIcons.clipboard /*Icons.note_add*/,
+                    size: 35.0, color: Colors.white),
               ),
               onTap: () {
                 navigationTapped(3);
@@ -168,7 +173,9 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
 
   void navigationTapped(int page) {
     //Animating Page
-    pageController.jumpToPage(page);
+    //pageController.jumpToPage(page);
+    pageController.animateToPage(page,
+        duration: Duration(milliseconds: 500), curve: Curves.ease);
   }
 
   void onPageChanged(int page) {

@@ -11,55 +11,68 @@ class SalesStateModel extends Model {
   List<SaleItems> saleItemsList = [];
   List<SaleProduct> saleProductsList = [];
 
-  void addSale() async {
+  void addSale() async {    
     int saleId = await db.getMaxSaleId();
     String startDt = Funcs.currentDateAsStr();
     sale = Sales(saleId, 100, startDt, "", 501, 0, 0);
+    calculateTotal();
+    notifyListeners();
+  }
+  
+  void addProduct(SaleItems saleItem) {
+    int index =
+        saleItemsList.indexWhere((i) => i.productId == saleItem.productId);
+    print(index);
+    if (index != -1) {
+      updateProduct(saleItem, saleItem.quantity + 1);
+    } else {
+      saleItemsList.add(saleItem);
+      calculateTotal();
+      notifyListeners();
+    }
+  }
+
+  void updateProduct(SaleItems saleItem, double quantity) {
+    int index =
+        saleItemsList.indexWhere((i) => i.productId == saleItem.productId);
+    saleItemsList[index].quantity = quantity;
+    if (saleItemsList[index].quantity == 0) removeProduct(saleItem);
+
+    calculateTotal();
     notifyListeners();
   }
 
-  void removeSale(int saleId) {
+  void removeProduct(SaleItems saleItem) {
+    int index =
+        saleItemsList.indexWhere((i) => i.productId == saleItem.productId);
+    saleItemsList[index].quantity = 1;
+    saleItemsList.removeWhere((item) => item.productId == saleItem.productId);
+    calculateTotal();
     notifyListeners();
   }
 
-  void updateSaleCurrency(Sales sales) {
-    notifyListeners();
-  }
-
-  void addProduct(SaleItems salesItem) {
-    int i = 0;
+  void calculateTotal() {
+    double totPrice = 0;
     saleItemsList.forEach((f) {
-      if (f.productId == salesItem.productId) {
-        salesItem.quantity++;
-        saleItemsList.removeAt(i);
-        saleItemsList.add(salesItem);
-        notifyListeners();
-        return;
-      }
-      i++;
+      totPrice += f.unitPrice * f.quantity;
     });
-    salesItem.saleItemId = i;
-    saleItemsList.add(salesItem);
-    notifyListeners();
-    return;
+    sale.totalPrice = totPrice;
+    //Sales(saleId, saleStatus, startDate, endDate, currencyId, totalPrice, totalVat);
   }
 
-/*
-  void addProduct(SaleProduct saleProduct){
-    int productId = saleProduct.saleItems.productId;
-    saleProductsList.forEach((f)  {
-      if(f.saleItems.productId == productId){
-        saleProduct.units++;
-        notifyListeners();
-        return;
-      }
+  void changeCurrency(int currency) {
+    double price = 0;
+    double totPrice = 0;
+    
+    saleItemsList.forEach((item) {
+      db.getProductPrice(item.productId, currency).then((prv){
+        price += prv * item.quantity;
+        //print("Item price is ${price.toString()} and quantity is ${item.quantity.toString()}");
+      }).whenComplete(() {
+        //print("Price is ${price.toStringAsFixed(2)}");
+        sale.totalPrice = price;
+      });
     });
-
-    saleProduct.saleProductId = saleProductsList.length;
-
-    saleProductsList.add(saleProduct);
-    notifyListeners();
-  }
-*/
+  }   
 
 }

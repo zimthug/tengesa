@@ -8,6 +8,11 @@ import 'package:tengesa/utils/colors.dart';
 import 'package:tengesa/utils/database/db_manager.dart';
 
 class SearchProductsScreen extends StatefulWidget {
+
+  final VoidCallback onButtonPressed;
+
+  SearchProductsScreen({@required this.onButtonPressed});
+
   @override
   _SearchProductsScreenState createState() => _SearchProductsScreenState();
 }
@@ -157,11 +162,11 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
         if (snapshot.hasError) {
           return Text('Error ${snapshot.error}');
         }
-        if (snapshot.hasData) {
+        if (snapshot.hasData && sales != null) {
           //snapshot.data.where((string) => string.product.toLowerCase().contains(term.toLowerCase()));
           return _productsListViewBuilder(snapshot);
         }
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData && sales != null) {
           return Center(
             child: Text(
               "No Products Found",
@@ -277,8 +282,7 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
 
                 ScopedModel.of<SalesStateModel>(context).addProduct(saleItems);
 
-                
-                
+                widget.onButtonPressed();
               },
             );
           }),

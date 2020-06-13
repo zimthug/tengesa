@@ -11,7 +11,7 @@ import 'package:tengesa/model/currency.dart';
 import 'package:tengesa/model/product.dart';
 import 'package:tengesa/model/product_measure.dart';
 import 'package:tengesa/model/user.dart';
-import 'package:tengesa/utils/database/db_ddls.dart';
+//import 'package:tengesa/utils/database/db_ddls.dart';
 
 class DbManager {
   static final DbManager _instance = new DbManager.internal();
@@ -225,7 +225,7 @@ class DbManager {
               where upper(product) like '%'||?||'%' """;
 
     var result = await dbClient.rawQuery(sql, [product.toUpperCase()]);
-	//print(result.toString());
+    //print(result.toString());
     if (result.length == 0) {
       return null;
     }
@@ -382,8 +382,7 @@ class DbManager {
   Future<List<Currency>> getCurrencyData() async {
     var dbClient = await db;
     String sql;
-    sql =
-        "SELECT * FROM currencies ORDER BY currency";
+    sql = "SELECT * FROM currencies ORDER BY currency";
 
     var result = await dbClient.rawQuery(sql);
     if (result.length == 0) return null;
@@ -395,4 +394,20 @@ class DbManager {
     return list;
   }
 
+  Future<double> getProductPrice(int productId, int currencyId) async {
+    var dbClient = await db;
+    String sql;
+    double price;
+    sql =
+        "SELECT product_price_id, product_id, currency_id, cast(price as double) price FROM product_prices WHERE product_id = ?  AND currency_id = ?";
+
+    var result = await dbClient.rawQuery(sql, [productId, currencyId]);
+    
+    List<ProductPrice> list = result.map((item) {
+      return ProductPrice.fromMap(item);
+    }).toList();
+		
+    price = list[0].price; 	  
+    return price;
+  }
 }
