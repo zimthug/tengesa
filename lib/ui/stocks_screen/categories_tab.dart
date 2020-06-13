@@ -14,8 +14,6 @@ class _CategoriesTabState extends State<CategoriesTab> {
   @override
   void initState() {
     super.initState();
-    //_saveData();
-    //_futureCategories = db.getCategoryWithProductCount(1001);
     _getData();
   }
 
@@ -76,8 +74,8 @@ class _CategoriesTabState extends State<CategoriesTab> {
                   return Text('Error ${snapshot.error}');
                 }
                 if (snapshot.hasData) {
-                  return _catgoriesListView(snapshot);
-                  //streamController.sink.add(snapshot.data.length);                  
+                  return _categoriesListView(snapshot);
+                  //streamController.sink.add(snapshot.data.length);
                 }
                 if (!snapshot.hasData) {
                   return Center(
@@ -102,39 +100,83 @@ class _CategoriesTabState extends State<CategoriesTab> {
     );
   }
 
-  Widget _catgoriesListView(AsyncSnapshot<List<CategoryProducts>> snapshot) {
-    return RefreshIndicator(      
+  removeCategory(categoryId) {
+    /*setState(() {
+      companies.removeAt(index);
+      });*/
+    print("Category to be deleted >>> " + categoryId.toString());
+  }
+
+  showSnackBar(context, category, index) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text('$category deleted'),
+      action: SnackBarAction(
+        label: "UNDO",
+        onPressed: () {
+          //undoDelete(index, categoryId);
+        },
+      ),
+    ));
+  }
+
+  Widget refreshBg() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: const Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _categoriesListView(AsyncSnapshot<List<CategoryProducts>> snapshot) {
+    return RefreshIndicator(
         onRefresh: _getData,
         child: ListView.builder(
             shrinkWrap: true,
             itemCount: snapshot.data.length,
             itemBuilder: (BuildContext context, int index) {
-              return Container(
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      width: MediaQuery.of(context).size.width / 1.4,
-                      height: 50,
-                      child: ListTile(
-                        title: Text(
-                          snapshot.data[index].category,
-                          style: TextStyle(fontWeight: FontWeight.w800,  ),
-                        ),
-                        subtitle: snapshot.data[index].products > 0 ? Text("No Products") : 
-                        Text(snapshot.data[index].products.toString() + " Products"),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.grey.shade400,
-                          child: Text(
-                            snapshot.data[index].products.toString(),
+              return Dismissible(
+                key: Key(snapshot.data[index].categoryId.toString()),
+                onDismissed: (direction) {
+                  var category = snapshot.data[index].categoryId;
+                  //showSnackBar(context, company, index);
+                  removeCategory(snapshot.data[index].categoryId);
+                },
+                background: refreshBg(),
+                child: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        width: MediaQuery.of(context).size.width / 1.4,
+                        height: 50,
+                        child: ListTile(
+                          title: Text(
+                            snapshot.data[index].category,
                             style: TextStyle(
-                              fontSize: 12.0,
-                              color: Colors.blue,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          subtitle: snapshot.data[index].products > 0
+                              ? Text("No Products")
+                              : Text(snapshot.data[index].products.toString() +
+                                  " Products"),
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey.shade400,
+                            child: Text(
+                              snapshot.data[index].products.toString(),
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.blue,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }));

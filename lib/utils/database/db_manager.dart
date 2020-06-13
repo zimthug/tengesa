@@ -10,6 +10,8 @@ import 'package:tengesa/model/category_products.dart';
 import 'package:tengesa/model/currency.dart';
 import 'package:tengesa/model/product.dart';
 import 'package:tengesa/model/product_measure.dart';
+import 'package:tengesa/model/user.dart';
+//import 'package:tengesa/utils/database/db_ddls.dart';
 
 class DbManager {
   static final DbManager _instance = new DbManager.internal();
@@ -34,12 +36,26 @@ class DbManager {
   }
 
   void _onCreate(Database db, int version) async {
+    //DbDdls dbDdls;
+    //dbDdls.createTables(db);
+    await db.execute("""CREATE TABLE users (
+      user_id INTEGER NOT NULL PRIMARY KEY,
+      email TEXT NOT NULL,
+      username TEXT NOT NULL,
+      password TEXT NOT NULL,
+      role TEXT NOT NULL,
+      branch_id INTEGER NOT NULL,
+      dated DATE)""");
+
+    await db.execute("""CREATE TABLE branches (
+      branch_id INTEGER NOT NULL PRIMARY KEY,
+      branch_name TEXT NOT NULL)""");
+
     await db.execute("""CREATE TABLE currencies (
       currency_id INTEGER PRIMARY KEY,
       currency TEXT,
       currency_code TEXT,
-      currency_sign TEXT
-      )""");
+      currency_sign TEXT)""");
 
     await db.execute("""CREATE TABLE product_measures (
       product_measure_id INTEGER PRIMARY KEY,
@@ -49,16 +65,14 @@ class DbManager {
     await db.execute("""CREATE TABLE categories (
         category_id INTEGER PRIMARY KEY,
         branch_id INTEGER,
-        category TEXT
-        )""");
+        category TEXT)""");
 
     await db.execute("""CREATE TABLE products (
       product_id INTEGER PRIMARY KEY,
       category_id INTEGER,
       product TEXT,
       product_code TEXT,
-      product_measure_id INTEGER
-      )""");
+      product_measure_id INTEGER)""");
 
     await db.execute("""CREATE TABLE product_prices (
       product_price_id INTEGER PRIMARY KEY,
@@ -73,7 +87,23 @@ class DbManager {
       max_stock DECIMAL(15, 4),
       current_stock DECIMAL(15,4))""");
 
-    //insertDefaults();
+    await db.execute("""CREATE TABLE sales (
+      sale_id INTEGER NOT NULL PRIMARY KEY,
+      sale_status INTEGER,
+      start_date DATE,
+      end_date DATE,
+      currency_id INTEGER,
+      total_price DECIMAL(15,2),
+      total_vat DECIMAL(15,2) )""");
+
+    await db.execute("""CREATE TABLE sale_items ( 
+      sale_item_id INTEGER NOT NULL PRIMARY KEY,
+      sale_id INTEGER NOT NULL,
+      product_id INTEGER NOT NULL,
+      quantity DECIMAL(15, 4),
+      unit_price DECIMAL(15, 2),
+      currency_id INTEGER,
+      total_price DECIMAL(15, 2) )""");
   }
 
   FutureOr<void> _onUpgrade(Database db, int oldVer, int newVer) async {
@@ -103,7 +133,6 @@ class DbManager {
       return Category.fromMap(item);
     }).toList();
 
-    //print(result);
     return list;
   }
 
@@ -160,11 +189,43 @@ class DbManager {
             from products pr left outer join 
             categories ct on pr.category_id = ct.category_id left outer join
             product_stocks ps on pr.product_id = ps.product_id""";
-            
-            /*where pr.product_id = IFNULL(?, pr.product_id)
+
+    /*where pr.product_id = IFNULL(?, pr.product_id)
              and pr.category_id = IFNULL(?, pr.category_id)""";*/
 
     var result = await dbClient.rawQuery(sql);
+    if (result.length == 0) {
+      return null;
+    }
+
+    List<ProductDetails> list = result.map((item) {
+      return ProductDetails.fromMap(item);
+    }).toList();
+
+    return list;
+  }
+
+  Future<List<ProductDetails>> findProductsDetailsByName(String product) async {
+    var dbClient = await db;
+    String sql;
+    sql = """select pr.*, ct.category, cast(min_stock as double) as min_stock, 
+              cast(max_stock as double) as max_stock, cast(current_stock as double) as current_stock, 
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 501) as rtgs, 
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 502) as ecocash,
+            (select cast(price as double) from product_prices 
+              where product_id = pr.product_id 
+                and currency_id = 503) as usd
+            from products pr left outer join 
+            categories ct on pr.category_id = ct.category_id left outer join
+            product_stocks ps on pr.product_id = ps.product_id 
+              where upper(product) like '%'||?||'%' """;
+
+    var result = await dbClient.rawQuery(sql, [product.toUpperCase()]);
+    //print(result.toString());
     if (result.length == 0) {
       return null;
     }
@@ -231,6 +292,23 @@ class DbManager {
     saveProductMeasureData(prod7);
   }
 
+  Future<void> intializeTestUser() {
+    /* This function is only used for testing */
+    print("Adding users");
+    User u01 = User(10, "cashier@tengesa.co.zw", "cashier", "123654", "CASHIER",
+        10001, " ");
+    User u02 =
+        User(50, "admin@tengesa.co.zw", "admin", "123654", "ADMIN", 10001, " ");
+    saveUserData(u01);
+    saveUserData(u02);
+  }
+
+  Future<int> saveUserData(User user) async {
+    var dbClient = await db;
+    int res = await dbClient.insert("users", user.toMap());
+    return res;
+  }
+
   Future<int> saveCurrencyData(Currency currency) async {
     var dbClient = await db;
     int res = await dbClient.insert("currencies", currency.toMap());
@@ -273,5 +351,63 @@ class DbManager {
 
     int res = await dbClient.insert("product_stocks", productStock.toMap());
     return res;
+  }
+
+  Future<List<User>> findUserByUsername(String username) async {
+    var dbClient = await db;
+    String sql;
+    sql = "SELECT * FROM users WHERE username = ?";
+
+    var result = await dbClient.rawQuery(sql, [username]);
+    if (result.length == 0) {
+      return null;
+    }
+
+    List<User> list = result.map((item) {
+      return User.fromMap(item);
+    }).toList();
+
+    return list;
+  }
+
+  Future<int> getMaxSaleId() async {
+    var dbClient = await db;
+    String sql;
+    sql = "SELECT IFNULL(MAX(sale_id), 300001) FROM sales";
+
+    var result = await dbClient.rawQuery(sql);
+    return Sqflite.firstIntValue(result);
+  }
+
+  Future<List<Currency>> getCurrencyData() async {
+    var dbClient = await db;
+    String sql;
+    sql = "SELECT * FROM currencies ORDER BY currency";
+
+    var result = await dbClient.rawQuery(sql);
+    if (result.length == 0) return null;
+
+    List<Currency> list = result.map((item) {
+      return Currency.fromMap(item);
+    }).toList();
+
+    return list;
+  }
+
+  Future<double> getProductPrice(int productId, int currencyId) async {
+    var dbClient = await db;
+    String sql;
+    double price;
+    sql =
+        "SELECT product_price_id, product_id, currency_id, cast(price as double) price FROM product_prices WHERE product_id = ?  AND currency_id = ?";
+
+    var result = await dbClient.rawQuery(sql, [productId, currencyId]);
+    
+    List<ProductPrice> list = result.map((item) {
+      return ProductPrice.fromMap(item);
+    }).toList();
+		
+    price = list[0].price; 	  
+    return price;
   }
 }

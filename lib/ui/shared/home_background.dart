@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tengesa/ui/tools/arc_clipper.dart';
+import 'package:tengesa/ui/widget/arc_clipper.dart';
 import 'package:tengesa/utils/colors.dart';
 
 class HomeBackground extends StatelessWidget {

@@ -10,10 +10,11 @@ class EditProductScreen extends StatefulWidget {
   _EditProductScreenState createState() => _EditProductScreenState();
 }
 
-class _EditProductScreenState extends State<EditProductScreen> {
+class _EditProductScreenState extends State<EditProductScreen>
+    with SingleTickerProviderStateMixin {
   bool _validate = false;
   int _categoryField;
-  String _productField;  
+  String _productField;
   double _stockMinimum;
   double _stockMaximum;
   double _stockCurrent;
@@ -30,7 +31,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void initState() {
     super.initState();
     _populateCategoryDropDownItems();
-    //db.intializeDatabase();
   }
 
   @override
@@ -38,7 +38,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return Scaffold(
       appBar: MyAppBar.getAppBar(context),
       body: _buildBody(),
-      bottomNavigationBar: BottomNavigator(),
+      //bottomNavigationBar: BottomNavigator(),
     );
   }
 
@@ -55,9 +55,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   Widget _productForm() {
+
     return ListView(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.fromLTRB(10, 40, 10, 10),   //symmetric(horizontal: 16.0),
       children: <Widget>[
+        Text("Create/ Edit Product", style: TextStyle(fontSize: 22, ),),
+        SizedBox(height: 20),
         TextFormField(
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.words,
@@ -76,7 +79,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           keyboardType: TextInputType.text,
           textCapitalization: TextCapitalization.words,
           maxLength: 15,
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.blue.shade900),
           decoration: InputDecoration(
             icon: Icon(Icons.lock_open),
             labelStyle: TextStyle(fontWeight: FontWeight.w300),
@@ -91,12 +94,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
           items: _categoryItems,
           value: _categoryField,
           hint: Text("Category"),
+          isExpanded: true,
           decoration: InputDecoration(
             icon: Icon(Icons.category),
             labelStyle: TextStyle(fontWeight: FontWeight.w300),
           ),
           onChanged: (val) {
-            print(val);
             setState(() {
               if (val != null) {
                 _categoryField = val;
@@ -109,7 +112,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           children: <Widget>[
             Text("Stocks",
                 style: TextStyle(
-                    color: Colors.blue,
+                    color: Colors.blue.shade900,
                     fontWeight: FontWeight.bold,
                     fontSize: 16))
           ],
@@ -120,7 +123,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "Current",
@@ -136,7 +139,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "Minimum",
@@ -152,7 +155,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "Maximum",
@@ -182,7 +185,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "RTGS\$",
@@ -198,7 +201,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "Ecocash",
@@ -214,7 +217,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             Flexible(
               child: TextFormField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.blue.shade900),
                 decoration: InputDecoration(
                   labelStyle: TextStyle(fontWeight: FontWeight.w300),
                   labelText: "US\$",
@@ -262,15 +265,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   _populateCategoryDropDownItems() {
-    db.getCategoryData().then((value) {
-      value.forEach((val) {
-        //print(val.category);
-        _categoryItems.add(DropdownMenuItem(
-          child: Text(val.category),
-          value: val.categoryId,
-        ));
+    //print("Loading data");
+    if (1 == 1) {
+      db.getCategoryData().then((value) {
+        value.forEach((val) {
+          //print(val.category);
+          setState(() {
+            _categoryItems.add(
+              DropdownMenuItem(
+                child: Text(val.category),
+                value: val.categoryId,
+              ),
+            );
+          });
+        });
       });
-    });
+    }
   }
 
   String _productValidator(String val) {
@@ -282,7 +292,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   _saveProduct() async {
     if (_key.currentState.validate()) {
       _key.currentState.save();
-      
+
       int productId = await db.getMaxProductId() + 1;
       Product product = Product(
           productId, _categoryField, _productField, _productCodeField, 0);
@@ -304,7 +314,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
           -1, productId, _stockMinimum, _stockMaximum, _stockCurrent);
 
       await db.saveProductStock(productStock);
-      
     }
   }
 }

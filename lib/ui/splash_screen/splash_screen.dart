@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tengesa/ui/home_screen/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
 import 'package:tengesa/ui/login_screen/login_screen.dart';
 import 'package:tengesa/ui/main_screen.dart';
+import 'package:tengesa/utils/database/db_manager.dart';
 import 'package:tengesa/utils/strings.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,7 +13,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  int _statusCode = 200;
+  bool loggedIn = false;
+  DbManager db = DbManager();
 
   @override
   void initState() {
@@ -21,14 +23,36 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<Timer> loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //var pc = prefs.getBool("tengesa.initialized");
+    var pc = prefs.getInt("tengesa.initg");
+
+    if (pc == null || pc == 0) {
+      db.intializeDatabase();
+      db.intializeTestUser();
+      //prefs.setBool("tengesa.initialized", true);
+      prefs.setInt("tengesa.initg", 1);
+    }
+
+    /*
+    if (prefs.getBool("tengesa.loggedin")) {
+      loggedIn = true;
+    }
+    */
+
+    var username = prefs.getString("tengesa.username");
+
+    if (username != null) {
+      loggedIn = true;
+    }
+
     return new Timer(Duration(seconds: 5), onDoneLoading);
   }
 
   onDoneLoading() async {
-    if (_statusCode == 201) {
-      //If the user is authenticated then
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+    if (loggedIn) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MainScreen()));
     } else {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => LoginScreen()));
@@ -53,7 +77,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     fontFamily: "Lobster"),
               ),
               SizedBox(height: 30),
-              Icon(Icons.access_time, color: Colors.deepOrange,)
+              Icon(Icons.beach_access, color: Colors.redAccent, size: 30),
             ],
           ),
         ),
