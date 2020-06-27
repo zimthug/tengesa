@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tengesa/ui/home_screen/balance_card.dart';
-import 'package:tengesa/ui/sale_screen/sale_screen.dart';
+//import 'package:tengesa/ui/sale_screen/sale_screen.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
 import 'package:tengesa/ui/shared/bottom_navigator.dart';
 import 'package:tengesa/ui/shared/home_background.dart';

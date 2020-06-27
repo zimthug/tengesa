@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:tengesa/ui/login_screen/login_screen.dart';
 import 'package:tengesa/ui/main_screen.dart';
+import 'package:tengesa/utils/database/db_initialize.dart';
 import 'package:tengesa/utils/database/db_manager.dart';
 import 'package:tengesa/utils/strings.dart';
 
@@ -15,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   bool loggedIn = false;
   DbManager db = DbManager();
+  InitializeDb initDb = InitializeDb();
 
   @override
   void initState() {
@@ -28,8 +30,8 @@ class _SplashScreenState extends State<SplashScreen> {
     var pc = prefs.getInt("tengesa.initg");
 
     if (pc == null || pc == 0) {
-      db.intializeDatabase();
-      db.intializeTestUser();
+        initDb.intializeDatabase();
+        initDb.intializeTestUser();
       //prefs.setBool("tengesa.initialized", true);
       prefs.setInt("tengesa.initg", 1);
     }

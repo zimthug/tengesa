@@ -8,7 +8,6 @@ import 'package:tengesa/utils/colors.dart';
 import 'package:tengesa/utils/database/db_manager.dart';
 
 class SearchProductsScreen extends StatefulWidget {
-
   final VoidCallback onButtonPressed;
 
   SearchProductsScreen({@required this.onButtonPressed});
@@ -45,13 +44,13 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Container(
-              height: 100,
+              height: 60,
               color: AppColors.primaryColor,
               child: ConstrainedBox(
                 constraints:
                     BoxConstraints(minWidth: MediaQuery.of(context).size.width),
                 child: Padding(
-                  padding: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.all(10.0),
                   child: TextField(
                     controller: _textController,
                     decoration: InputDecoration(
@@ -78,7 +77,7 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                 children: <Widget>[
                   Text(
                     "Filter Products ",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
                   ),
                   _categoriesFilter()
                 ],
@@ -87,7 +86,7 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
             Padding(
               padding: EdgeInsets.all(10),
               child: Container(
-                height: MediaQuery.of(context).size.height / 1.8,
+                height: MediaQuery.of(context).size.height / 2,
                 child: _productsList(),
               ),
             ),
@@ -278,7 +277,8 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                     1,
                     price,
                     sales.currencyId,
-                    price);
+                    price,
+                    snapshot.data[index].product);
 
                 ScopedModel.of<SalesStateModel>(context).addProduct(saleItems);
 
