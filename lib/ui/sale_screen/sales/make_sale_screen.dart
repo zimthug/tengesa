@@ -101,7 +101,7 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
           child: Icon(Icons.shopping_cart),
         ),
         CircleAvatar(
-          radius: 10.0,
+          radius: 8.0,
           backgroundColor: Colors.red,
           child: Text(
             "0",
@@ -117,9 +117,9 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
       color: AppColors.primaryColor,
       elevation: 0.0,
       shape: CircularNotchedRectangle(),
-      notchMargin: 5.0,
+      notchMargin: 6.0,
       child: Container(
-        height: 60.0,
+        height: 40.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
@@ -128,7 +128,7 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
               child: Container(
                 width: MediaQuery.of(context).size.width / 5,
                 child: Icon(FontAwesomeIcons.barcode /*Icons.scanner*/,
-                    size: 35.0, color: Colors.white),
+                    size: 25.0, color: Colors.white),
               ),
               onTap: () {
                 navigationTapped(1);
@@ -137,7 +137,7 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
             GestureDetector(
               child: Container(
                 width: MediaQuery.of(context).size.width / 5,
-                child: Icon(Icons.search, size: 35.0, color: Colors.white),
+                child: Icon(Icons.search, size: 25.0, color: Colors.white),
               ),
               onTap: () {
                 navigationTapped(2);
@@ -148,7 +148,7 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
               child: Container(
                 width: MediaQuery.of(context).size.width / 5,
                 child: Icon(FontAwesomeIcons.clipboard /*Icons.note_add*/,
-                    size: 35.0, color: Colors.white),
+                    size: 25.0, color: Colors.white),
               ),
               onTap: () {
                 navigationTapped(3);
@@ -157,7 +157,7 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
             GestureDetector(
               child: Container(
                 width: MediaQuery.of(context).size.width / 5,
-                child: Icon(Icons.close, size: 35.0, color: Colors.white),
+                child: Icon(Icons.close, size: 25.0, color: Colors.white),
               ),
               onTap: () {
                 navigationTapped(4);

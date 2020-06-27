@@ -31,7 +31,7 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
               child: Text(
                 "Where do you want to be?",
                 style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 28,
                     color: Colors.deepOrangeAccent,
                     fontWeight: FontWeight.w500,
                     fontFamily: "Nunito"),
@@ -39,7 +39,7 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
             ),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         Expanded(child: _buildBody()),
       ],
     ));

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -5,7 +7,6 @@ import 'package:tengesa/model/currency.dart';
 import 'package:tengesa/model/sales.dart';
 import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/utils/colors.dart';
-import 'package:tengesa/utils/database/db_manager.dart';
 
 class SaleProductsScreen extends StatefulWidget {
   @override
@@ -13,11 +14,11 @@ class SaleProductsScreen extends StatefulWidget {
 }
 
 class _SaleProductsScreenState extends State<SaleProductsScreen> {
-  int _currency;
   Sales sales;
-  List<Currency> _currencyList = [];
-  DbManager db = DbManager();
+  int _currency;
+  //double _totalPrice;
   List<SaleItems> saleItemsList;
+  List<Currency> _currencyList = [];
   List<DropdownMenuItem> _currencyItems = [];
 
   @override
@@ -42,20 +43,21 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
             )
           : Container(
               color: Colors.grey.shade300,
-              child: _body(),
+              child: body(),
             ),
     );
   }
 
-  Widget _body() {
+  Widget body() {
     setState(() {
       if (_currency == null) {
         _currency = sales.currencyId;
+		//_totalPrice = sales.totalPrice;
       }
     });
 
     return Padding(
-      padding: EdgeInsets.all(20),
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         children: <Widget>[
           Padding(
@@ -63,7 +65,7 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
             child: Material(
               elevation: 4,
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12.0),
+              borderRadius: BorderRadius.circular(10),
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
@@ -80,7 +82,7 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12.0),
               child: Container(
-                height: 100,
+                height: 70,
                 child: _invoiceBuilder(),
               ),
             ),
@@ -90,132 +92,21 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
     );
   }
 
-  Widget _invoiceBuilder() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "Total",
-                style: TextStyle(
-                  color: AppColors.primaryColor,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          height: 2,
-          color: Colors.black87,
-        ),
-        ListTile(
-          contentPadding: const EdgeInsets.only(
-            left: 10,
-            top: 5,
-            bottom: 5,
-          ),
-          leading: Card(
-            elevation: 4,
-            child: Container(
-              width: 80,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    "Currency",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    _currencyList
-                        .firstWhere((cur) => cur.currencyId == _currency,
-                            orElse: () => Currency(0, "NAN", "", ""))
-                        .currency,
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[              
-              Text(
-                "Sale Total",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),            
-              Text(
-                sales.totalPrice.toStringAsFixed(2),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.primaryColor,
-                    fontWeight: FontWeight.w700,
-                    fontStyle: FontStyle.italic),
-              ),
-            ],
-          ),
-          trailing: Container(
-            height: 70,
-            width: 80,
-            padding: const EdgeInsets.only(right: 5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                    icon: Icon(
-                      FontAwesomeIcons.chevronCircleRight,
-                      size: 36,
-                      color: AppColors.primaryColor,
-                    ),
-                    onPressed: null),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _saleItemsListing() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        Card(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                "Basket List Items",
+                "Currency",
                 style: TextStyle(
                   color: AppColors.primaryColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
                 ),
               ),
               SizedBox(
@@ -225,7 +116,8 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
                   value: _currency,
                   isExpanded: true,
                   onChanged: (val) {
-                    ScopedModel.of<SalesStateModel>(context).changeCurrency(val);
+                    ScopedModel.of<SalesStateModel>(context)
+                        .changeCurrency(val);
                     setState(() {
                       if (val != null) {
                         _currency = val;
@@ -237,17 +129,134 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
             ],
           ),
         ),
-        Divider(
-          height: 3,
-          color: Colors.black87,
+        Container(
+            child: Expanded(
+          child: ListView.builder(
+              itemCount: ScopedModel.of<SalesStateModel>(context,
+                      rebuildOnChange: true)
+                  .saleItemsList
+                  .length,
+              itemBuilder: (context, index) {
+                return ScopedModelDescendant<SalesStateModel>(
+                    builder: (context, child, model) {
+                  /*return ListTile(
+                    title: Text(model.saleItemsList[index].product),
+                    subtitle: Text(
+                        "Unit Price ${model.saleItemsList[index].unitPrice.toStringAsFixed(2)}. Total Price ${model.saleItemsList[index].totalPrice.toStringAsFixed(2)}"),
+                  );*/
+                  return Card(
+                    elevation: 8.0,
+                    child: Container(
+                      padding: EdgeInsets.all(5.0),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            ListTile(
+                              title: Text(model.saleItemsList[index].product +
+                                  " (" +
+                                  model.saleItemsList[index].quantity
+                                      .toString() +
+                                  ")"),
+                              subtitle: Text(
+                                "Unit Price " +
+                                    model.saleItemsList[index].unitPrice
+                                        .toStringAsFixed(2) +
+                                    " Total Price " +
+                                    model.saleItemsList[index].totalPrice
+                                        .toStringAsFixed(2),
+                              ),
+                            )
+                          ]),
+                    ),
+                  );
+                });
+              }),
+        ))
+        /*
+                ListView.builder(
+                      itemCount: ScopedModel.of<SalesStateModel>(context,
+                              rebuildOnChange: true)
+                          .saleItemsList
+                          .length,
+                      itemBuilder: (context, index) {
+                        return ScopedModelDescendant<SalesStateModel>(
+                            builder: (context, child, model) {
+                              return Container();
+                          //return ListTile();
+                        });
+                      }),
+                */
+      ],
+    );
+  }
+
+  Widget _invoiceBuilder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        ListTile(
+          title: Card(
+            elevation: 8,
+            color: Colors.grey.shade100,
+            child: Container(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 80,
+                    child: Text(
+                      _currencyList
+                          .firstWhere(
+                            (cur) => cur.currencyId == sales.currencyId,
+                            orElse: () => Currency(0, "NAN", "", ""),
+                          )
+                          .currency,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 150,
+                    child: Text(
+                        //"\$ ${sale.totalPrice.toStringAsFixed(2)}",
+						sales.totalPrice.toStringAsFixed(2),
+					    style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          trailing: Container(
+            height: 50,
+            child: IconButton(
+                icon: Icon(
+                  FontAwesomeIcons.chevronCircleRight,
+                  size: 35,
+                  color: AppColors.primaryColor,
+                ),
+                onPressed: null),
+          ),
         ),
-        Text(saleItemsList.length.toString()),
       ],
     );
   }
 
   _populateCurrenciesDropDownItems() {
-    db.getCurrencyData().then((value) {
+    /*ScopedModelDescendant<SalesStateModel>(
+      builder: (context, child, model) => model.getCurrencyData()
+    );*/
+
+    ScopedModel.of<SalesStateModel>(context).getCurrencyData().then((value) {
       _currencyList = value;
       value.forEach((val) {
         setState(() {

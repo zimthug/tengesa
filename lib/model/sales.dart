@@ -29,9 +29,10 @@ class SaleItems {
   double unitPrice;
   int currencyId;
   double totalPrice;
+  String product;
 
   SaleItems(this.saleItemId, this.saleId, this.productId, this.quantity,
-      this.unitPrice, this.currencyId, this.totalPrice);
+      this.unitPrice, this.currencyId, this.totalPrice, this.product);
 
   SaleItems.fromMap(dynamic obj) {
     this.saleItemId = obj["sale_item_id"];
@@ -41,5 +42,6 @@ class SaleItems {
     this.unitPrice = obj["unit_price"];
     this.currencyId = obj["currency_id"];
     this.totalPrice = obj["total_price"];
+    this.product = obj["product"];
   }
 }

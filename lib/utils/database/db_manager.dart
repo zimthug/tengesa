@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io' as io;
 
-//import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -11,7 +10,6 @@ import 'package:tengesa/model/currency.dart';
 import 'package:tengesa/model/product.dart';
 import 'package:tengesa/model/product_measure.dart';
 import 'package:tengesa/model/user.dart';
-//import 'package:tengesa/utils/database/db_ddls.dart';
 
 class DbManager {
   static final DbManager _instance = new DbManager.internal();
@@ -36,8 +34,7 @@ class DbManager {
   }
 
   void _onCreate(Database db, int version) async {
-    //DbDdls dbDdls;
-    //dbDdls.createTables(db);
+    
     await db.execute("""CREATE TABLE users (
       user_id INTEGER NOT NULL PRIMARY KEY,
       email TEXT NOT NULL,
@@ -264,44 +261,7 @@ class DbManager {
     return Sqflite.firstIntValue(result);
   }
 
-  Future<void> intializeDatabase() {
-    print("Adding currencies");
-    Currency currency1 = Currency(501, "Zim RTGS", "RTGS\$", "RTGS\S");
-    Currency currency2 = Currency(502, "Ecocash", "RTGS\$", "RTGS\S");
-    Currency currency3 = Currency(503, "USD", "USD", "\S");
-
-    saveCurrencyData(currency1);
-    saveCurrencyData(currency2);
-    saveCurrencyData(currency3);
-
-    print("Adding product_measures");
-    ProductMeasure prod1 = ProductMeasure(201, "L", "Litre");
-    ProductMeasure prod2 = ProductMeasure(202, "ML", "Millilitre");
-    ProductMeasure prod3 = ProductMeasure(203, "KG", "Kilogram");
-    ProductMeasure prod4 = ProductMeasure(204, "G", "Milligram");
-    ProductMeasure prod5 = ProductMeasure(205, "M", "Metre");
-    ProductMeasure prod6 = ProductMeasure(206, "CM", "Centimeter");
-    ProductMeasure prod7 = ProductMeasure(207, "U", "Unit");
-
-    saveProductMeasureData(prod1);
-    saveProductMeasureData(prod2);
-    saveProductMeasureData(prod3);
-    saveProductMeasureData(prod4);
-    saveProductMeasureData(prod5);
-    saveProductMeasureData(prod6);
-    saveProductMeasureData(prod7);
-  }
-
-  Future<void> intializeTestUser() {
-    /* This function is only used for testing */
-    print("Adding users");
-    User u01 = User(10, "cashier@tengesa.co.zw", "cashier", "123654", "CASHIER",
-        10001, " ");
-    User u02 =
-        User(50, "admin@tengesa.co.zw", "admin", "123654", "ADMIN", 10001, " ");
-    saveUserData(u01);
-    saveUserData(u02);
-  }
+  
 
   Future<int> saveUserData(User user) async {
     var dbClient = await db;

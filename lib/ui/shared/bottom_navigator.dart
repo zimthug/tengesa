@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tengesa/ui/home_screen/home_screen.dart';
 import 'package:tengesa/ui/reports_screen/reports_home_screen.dart';
-import 'package:tengesa/ui/sale_screen/sale_screen.dart';
+//import 'package:tengesa/ui/sale_screen/sale_screen.dart';
 import 'package:tengesa/ui/stocks_screen/stocks_screen.dart';
 import 'package:tengesa/utils/strings.dart';
 
@@ -19,7 +19,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     int currentTabIndex = 0;
     List<Widget> tabs = [
       HomeScreen(),
-      SaleScreen(),
+      //SaleScreen(),
       StocksScreen(),
       ReportHomeScreen(),
     ];
