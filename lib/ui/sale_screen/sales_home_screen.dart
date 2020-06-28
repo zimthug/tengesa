@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:scoped_model/scoped_model.dart';
+//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//import 'package:scoped_model/scoped_model.dart';
 import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/ui/sale_screen/sales/make_sale_screen.dart';
 import 'package:tengesa/ui/sale_screen/sales/sales_list_screen.dart';
@@ -21,7 +22,7 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +32,7 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
               child: Text(
                 "Where do you want to be?",
                 style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 18,
                     color: Colors.deepOrangeAccent,
                     fontWeight: FontWeight.w500,
                     fontFamily: "Nunito"),
@@ -86,7 +87,10 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
                 ],
               ),
             ), onTap: () {
-          ScopedModel.of<SalesStateModel>(context).addSale();
+              Provider.of<SalesStateModel>(context, listen: false).addSale();
+              //SalesStateModel salesStateModel;
+              //salesStateModel.addSale();
+
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => MakeSaleScreen(),

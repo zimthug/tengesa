@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/ui/splash_screen/splash_screen.dart';
@@ -25,8 +26,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<SalesStateModel>(
+    /*return ScopedModel<SalesStateModel>(
       model: SalesStateModel(),
+      child: MaterialApp(
+        title: Strings.appName,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'Oxygen',
+          primarySwatch: primaryColor,
+        ),
+        home: SplashScreen(),
+      ),
+    );*/
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SalesStateModel(),
+        ),
+      ],
       child: MaterialApp(
         title: Strings.appName,
         debugShowCheckedModeBanner: false,
