@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tengesa/model/sales.dart';
-import 'package:tengesa/ui/sale_screen/sales/make_sale_screen.dart';
+import 'package:tengesa/ui/sale_screen/sales/sales_main_screen.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
 import 'package:tengesa/ui/widget/search_widget.dart';
 import 'package:tengesa/utils/colors.dart';
@@ -13,7 +13,6 @@ class SalesListScreen extends StatefulWidget {
 class _SalesListScreenState extends State<SalesListScreen> {
   Sales sales;
 
-  
   @override
   Widget build(BuildContext context) {
     //sales = {Sales(100, 1, "2020", "endDate", 501, 100, 10)};
@@ -88,12 +87,12 @@ class _SalesListScreenState extends State<SalesListScreen> {
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        MakeSaleScreen(),
-                                  ),
-                                );
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      SalesMainScreen(),
+                                ),
+                              );
                             },
                             child: Container(
                               padding: EdgeInsets.all(8),
@@ -133,7 +132,7 @@ class _SalesListScreenState extends State<SalesListScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        MakeSaleScreen(),
+                                        SalesMainScreen(),
                                   ),
                                 );
                               },

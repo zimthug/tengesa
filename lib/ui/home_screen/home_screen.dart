@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tengesa/ui/home_screen/balance_card.dart';
 //import 'package:tengesa/ui/sale_screen/sale_screen.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
-import 'package:tengesa/ui/shared/bottom_navigator.dart';
-import 'package:tengesa/ui/shared/home_background.dart';
 import 'package:tengesa/ui/shared/navigation_drawer.dart';
 import 'package:tengesa/utils/strings.dart';
-
-import 'dashboard_menu_row.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -38,11 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: _onWillPop,
       child: Scaffold(
         key: _scaffoldkey,
-        body: _body(),        
+        appBar: MyAppBar.getAppBar(context),
+        drawer: NavigationDrawer(),
+        body: _body(),
       ),
     );
   }
-
 
   Widget _body() {
     return Center(

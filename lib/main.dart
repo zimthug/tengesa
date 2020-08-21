@@ -26,18 +26,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /*return ScopedModel<SalesStateModel>(
-      model: SalesStateModel(),
-      child: MaterialApp(
-        title: Strings.appName,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: 'Oxygen',
-          primarySwatch: primaryColor,
-        ),
-        home: SplashScreen(),
-      ),
-    );*/
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(

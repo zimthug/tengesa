@@ -4,8 +4,11 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //import 'package:scoped_model/scoped_model.dart';
 import 'package:tengesa/model/state/sales_state.dart';
-import 'package:tengesa/ui/sale_screen/sales/make_sale_screen.dart';
+import 'package:tengesa/ui/sale_screen/sales/sales_main_screen.dart';
 import 'package:tengesa/ui/sale_screen/sales/sales_list_screen.dart';
+import 'package:tengesa/ui/shared/appbar.dart';
+import 'package:tengesa/ui/shared/navigation_drawer.dart';
+import 'package:tengesa/utils/colors.dart';
 
 class SalesHomeScreen extends StatefulWidget {
   @override
@@ -18,32 +21,35 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldkey,
+        appBar: MyAppBar.getAppBar(context),
+        drawer: NavigationDrawer(),
         body: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                "Where do you want to be?",
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.deepOrangeAccent,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Nunito"),
-              ),
+            SizedBox(height: 5),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    "Where do you want to be?",
+                    style: TextStyle(
+                        fontSize: 24,
+                        color: AppColors.primaryColor,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "HelveticaNeue"),
+                  ),
+                ),
+              ],
             ),
+            SizedBox(height: 5),
+            Expanded(child: _buildBody()),
           ],
-        ),
-        SizedBox(height: 10),
-        Expanded(child: _buildBody()),
-      ],
-    ));
+        ));
   }
 
   Widget _buildBody() {
@@ -82,18 +88,19 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
                     style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
-                        color: Colors.blueAccent),
+                        color: Colors.blueAccent,
+                        fontFamily: "HelveticaNeue"),
                   ),
                 ],
               ),
             ), onTap: () {
-              Provider.of<SalesStateModel>(context, listen: false).addSale();
-              //SalesStateModel salesStateModel;
-              //salesStateModel.addSale();
+          Provider.of<SalesStateModel>(context, listen: false).addSale();
+          //SalesStateModel salesStateModel;
+          //salesStateModel.addSale();
 
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (_) => MakeSaleScreen(),
+              builder: (_) => SalesMainScreen(),
             ),
           );
         }),
@@ -137,7 +144,8 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
                   style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
-                      color: Colors.red.shade900),
+                      color: Colors.red.shade900,
+                      fontFamily: "HelveticaNeue"),
                 )
               ],
             ),
@@ -167,7 +175,8 @@ class _SalesHomeScreenState extends State<SalesHomeScreen> {
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
-                        color: Colors.redAccent),
+                        color: Colors.redAccent,
+                        fontFamily: "HelveticaNeue"),
                   )
                 ],
               ),

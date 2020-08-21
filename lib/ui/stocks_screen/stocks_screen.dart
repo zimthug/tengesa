@@ -28,9 +28,7 @@ class _StocksScreenState extends State<StocksScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: MyAppBar.getAppBar(context),
       body: _body(),
-      //bottomNavigationBar: BottomNavigator(),
     );
   }
 
@@ -112,7 +110,7 @@ class _StocksScreenState extends State<StocksScreen>
                   CategoriesTab(),
                 ],
               ),
-            ),            
+            ),
           ],
         ),
       ),

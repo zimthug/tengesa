@@ -85,6 +85,13 @@ flutter:
         - asset: assets/fonts/Raleway-Medium.ttf
         - asset: assets/fonts/Raleway-Regular.ttf
         - asset: assets/fonts/Raleway-Bold.ttf
+    - family: HelveticaNeue
+      fonts:
+        - asset: assets/fonts/HelveticaNeue.ttf
+        - asset: assets/fonts/HelveticaNeue-Bold.ttf
+        - asset: assets/fonts/HelveticaNeue-Light.ttf
+        - asset: assets/fonts/HelveticaNeue-Medium.ttf
+        - asset: assets/fonts/HelveticaNeue-Thin.ttf
 
 
   # To add assets to your application, add an assets section, like this:

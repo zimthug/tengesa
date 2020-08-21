@@ -1,6 +1,7 @@
 //import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:tengesa/model/currency.dart';
+import 'package:tengesa/model/product.dart';
 import 'package:tengesa/model/sale_product.dart';
 import 'package:tengesa/model/sales.dart';
 import 'package:tengesa/utils/database/db_manager.dart';
@@ -37,10 +38,22 @@ class SalesStateModel with ChangeNotifier {
   }
 
   void removeProduct(SaleItems saleItem) {
-    int index =
-        saleItemsList.indexWhere((i) => i.productId == saleItem.productId);
-    saleItemsList[index].quantity = 1;
-    saleItemsList.removeWhere((item) => item.productId == saleItem.productId);
+    for (var item in saleItemsList) {
+      if (item.productId == saleItem.productId) {
+        item.quantity--;
+        if (item.quantity > 0) {
+          item.totalPrice = item.unitPrice * item.quantity;
+          calculateTotal();
+          notifyListeners();
+          return null;
+        }
+        saleItemsList
+            .removeWhere((item) => item.productId == saleItem.productId);
+        calculateTotal();
+        notifyListeners();
+        return null;
+      }
+    }
     calculateTotal();
     notifyListeners();
   }
@@ -72,5 +85,9 @@ class SalesStateModel with ChangeNotifier {
 
   Future<List<Currency>> getCurrencyData() {
     return db.getCurrencyData();
+  }
+
+  Future<List<ProductDetails>> getProductDetailsData() {
+    return db.getProductsDetails(0, 0);
   }
 }

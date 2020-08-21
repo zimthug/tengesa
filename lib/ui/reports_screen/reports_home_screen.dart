@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sparkline/flutter_sparkline.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:tengesa/ui/reports_screen/charts_data.dart';
+import 'package:tengesa/ui/shared/appbar.dart';
+import 'package:tengesa/ui/shared/navigation_drawer.dart';
 
 class ReportHomeScreen extends StatefulWidget {
   ReportHomeScreen() : super();
@@ -24,10 +26,12 @@ class _ReportHomeScreenState extends State<ReportHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: MyAppBar.getAppBar(context),
-      body: (Center(
+      key: _scaffoldkey,
+      appBar: MyAppBar.getAppBar(context),
+      drawer: NavigationDrawer(),
+      body: Center(
         child: dashboard(),
-      )),
+      ),
       //bottomNavigationBar: BottomNavigator(),
     );
   }
@@ -201,8 +205,8 @@ class _ReportHomeScreenState extends State<ReportHomeScreen> {
                       child: Center(
                           child: Padding(
                         padding: EdgeInsets.all(16.0),
-                        child:
-                            Icon(Icons.shop_two, color: Colors.white, size: 30.0),
+                        child: Icon(Icons.shop_two,
+                            color: Colors.white, size: 30.0),
                       )))
                 ]),
           ),

@@ -10,6 +10,10 @@ import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/utils/colors.dart';
 
 class SaleProductsScreen extends StatefulWidget {
+  final VoidCallback onButtonPressed;
+
+  SaleProductsScreen({@required this.onButtonPressed});
+
   @override
   _SaleProductsScreenState createState() => _SaleProductsScreenState();
 }
@@ -142,31 +146,128 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
           child: ListView.builder(
               itemCount: saleItemsList.length,
               itemBuilder: (context, index) {
-                return Card(
-                  elevation: 8.0,
-                  child: Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          ListTile(
-                            title: Text(saleItemsList[index].product +
-                                " (" +
-                                saleItemsList[index].quantity.toString() +
-                                ")"),
-                            subtitle: Text(
-                              "Unit Price " +
-                                  saleItemsList[index]
-                                      .unitPrice
-                                      .toStringAsFixed(2) +
-                                  " Total Price " +
-                                  saleItemsList[index]
-                                      .totalPrice
-                                      .toStringAsFixed(2),
-                            ),
-                          )
-                        ]),
+                return Container(
+                  height: 80,
+                  child: Card(
+                    elevation: 8.0,
+                    child: Container(
+                      //padding: EdgeInsets.all(5.0),
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            ListTile(
+                              title: Text(
+                                saleItemsList[index].product,
+                                style: TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w600),
+                              ),
+                              subtitle: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    width: 160,
+                                    child: Text(
+                                      "Unit Price \$ " +
+                                          saleItemsList[index]
+                                              .unitPrice
+                                              .toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.deepPurple,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 160,
+                                    child: Text(
+                                      "Total Price\$ " +
+                                          saleItemsList[index]
+                                              .totalPrice
+                                              .toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ClipOval(
+                                    child: Material(
+                                      color: Colors.blueGrey,
+                                      child: InkWell(
+                                        splashColor: Colors.deepOrange,
+                                        child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: Icon(Icons.remove)),
+                                        onTap: () {
+                                          var saleItems = SaleItems(
+                                              -1,
+                                              -1,
+                                              saleItemsList[index].productId,
+                                              0,
+                                              0,
+                                              0,
+                                              0,
+                                              " ");
+                                          Provider.of<SalesStateModel>(context,
+                                                  listen: false)
+                                              .removeProduct(saleItems);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 28,
+                                    child: Center(
+                                      child: Text(
+                                        saleItemsList[index]
+                                            .quantity
+                                            .toStringAsFixed(0),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  ),
+                                  ClipOval(
+                                    child: Material(
+                                      color: Colors.blueGrey,
+                                      child: InkWell(
+                                        splashColor: Colors.deepOrange,
+                                        child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: Icon(Icons.add)),
+                                        onTap: () {
+                                          var saleItems = SaleItems(
+                                              -1,
+                                              -1,
+                                              saleItemsList[index].productId,
+                                              0,
+                                              0,
+                                              0,
+                                              0,
+                                              " ");
+                                          Provider.of<SalesStateModel>(context,
+                                                  listen: false)
+                                              .addProduct(saleItems);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ]),
+                    ),
                   ),
                 );
               }),
@@ -221,13 +322,18 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
           ),
           trailing: Container(
             height: 50,
-            child: IconButton(
-                icon: Icon(
-                  FontAwesomeIcons.chevronCircleRight,
-                  size: 35,
-                  color: AppColors.primaryColor,
-                ),
-                onPressed: null),
+            child: InkWell(
+              splashColor: Colors.deepOrange,
+              child: IconButton(
+                  icon: Icon(
+                    FontAwesomeIcons.chevronCircleRight,
+                    size: 35,
+                    color: AppColors.primaryColor,
+                  ),
+                  onPressed: () {
+                    widget.onButtonPressed();
+                  }),
+            ),
           ),
         ),
       ],
