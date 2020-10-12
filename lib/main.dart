@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:tengesa/model/state/sales_state.dart';
+import 'package:tengesa/model/state/user_state.dart';
 import 'package:tengesa/ui/splash_screen/splash_screen.dart';
 import 'package:tengesa/utils/colors.dart';
 import 'package:tengesa/utils/strings.dart';
@@ -30,6 +30,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => SalesStateModel(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => UserStateModel(),
         ),
       ],
       child: MaterialApp(

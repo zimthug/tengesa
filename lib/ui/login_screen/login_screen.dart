@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tengesa/model/state/user_state.dart';
 import 'package:tengesa/model/user.dart';
 import 'package:tengesa/ui/main_screen.dart';
 import 'package:tengesa/ui/widget/wavy_header.dart';
@@ -12,12 +13,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isError;
-  //bool _loggedIn;
   bool _validate = false;
+  String _errorMsg = "";
   String _usernameField;
   String _passwordField;
   DbManager db = DbManager();
   GlobalKey<FormState> _key = new GlobalKey();
+  UserStateModel userStateModel = UserStateModel();
 
   @override
   void initState() {
@@ -52,7 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Card(
       elevation: 8.0,
       child: Text(
-        "Invalid Username/ Password",
+        _errorMsg,
+        //"Invalid Username/ Password",
         style: TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.w700,
@@ -107,7 +110,28 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               color: Colors.blue.shade900,
               onPressed: () {
-                loginUser().then((val) {
+                if (_key.currentState.validate()) {
+                  _key.currentState.save();
+                }
+
+                userStateModel
+                    .loginUser(_usernameField, _passwordField)
+                    .then((val) {
+                  if (val == "OK") {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => MainScreen(),
+                      ),
+                    );
+                  } else {
+                    setState(() {
+                      _isError = true;
+                      _errorMsg = val;
+                    });
+                  }
+                });
+
+                /*loginUser().then((val) {
                   //print("Data from function is " + val.toString());
                   if (val) {
                     Navigator.of(context).pushReplacement(
@@ -120,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       _isError = true;
                     });
                   }
-                });
+                });*/
               },
             ),
           ),
@@ -152,6 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  /*
   Future<bool> loginUser() async {
     if (_key.currentState.validate()) {
       _key.currentState.save();
@@ -180,10 +205,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return false;
   }
+  */
 
   String usernameValidator(String val) {
     if (val.length < 2) {
       return 'Username must be at least 2 characters';
     }
+    return null;
   }
 }
