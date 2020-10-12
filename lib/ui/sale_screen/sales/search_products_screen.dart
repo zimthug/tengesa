@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:tengesa/model/product.dart';
 import 'package:tengesa/model/sales.dart';
@@ -35,8 +36,10 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     sales =
-        ScopedModel.of<SalesStateModel>(context, rebuildOnChange: true).sale;
+        Provider.of<SalesStateModel>(context, listen: false).sale;
+    
     return Scaffold(
       body: Container(
         child: Column(
@@ -280,7 +283,9 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
                     price,
                     snapshot.data[index].product);
 
-                ScopedModel.of<SalesStateModel>(context).addProduct(saleItems);
+                Provider.of<SalesStateModel>(context, listen: false).addProduct(saleItems);
+                //SalesStateModel salesStateModel = SalesStateModel();
+                //salesStateModel.addProduct(saleItems);
 
                 widget.onButtonPressed();
               },
@@ -291,5 +296,6 @@ class _SearchProductsScreenState extends State<SearchProductsScreen> {
 
   Future<void> _getProductDetailsData() {
     _futureProductDetails = db.getProductsDetails(0, 0);
+    return null;
   }
 }

@@ -1,11 +1,13 @@
-import 'package:scoped_model/scoped_model.dart';
+//import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:tengesa/model/currency.dart';
+import 'package:tengesa/model/product.dart';
 import 'package:tengesa/model/sale_product.dart';
 import 'package:tengesa/model/sales.dart';
 import 'package:tengesa/utils/database/db_manager.dart';
 import 'package:tengesa/utils/funcs.dart';
 
-class SalesStateModel extends Model {
+class SalesStateModel with ChangeNotifier {
   DbManager db = DbManager();
   Sales sale;
   List<Sales> sales = [];
@@ -23,9 +25,8 @@ class SalesStateModel extends Model {
   void addProduct(SaleItems saleItem) {
     for (var item in saleItemsList) {
       if (item.productId == saleItem.productId) {
-        //print("Current quantity is ${saleItem.quantity.toString()}");
-        //updateProduct(saleItem, saleItem.quantity+1, i);
         item.quantity++;
+        item.totalPrice = item.unitPrice * item.quantity;
         calculateTotal();
         notifyListeners();
         return null;
@@ -36,25 +37,23 @@ class SalesStateModel extends Model {
     notifyListeners();
   }
 
-  /*
-  void updateProduct(SaleItems saleItem, double quantity, int index) {
-    //print("New quantity is ${quantity.toString()} at index ${index.toString()}");
-
-    int index =
-        saleItemsList.indexWhere((i) => i.productId == saleItem.productId);
-    saleItemsList[index].quantity = quantity;
-    if (saleItemsList[index].quantity == 0) removeProduct(saleItem);
-
-    calculateTotal();
-    notifyListeners();
-  }
-  */
-
   void removeProduct(SaleItems saleItem) {
-    int index =
-        saleItemsList.indexWhere((i) => i.productId == saleItem.productId);
-    saleItemsList[index].quantity = 1;
-    saleItemsList.removeWhere((item) => item.productId == saleItem.productId);
+    for (var item in saleItemsList) {
+      if (item.productId == saleItem.productId) {
+        item.quantity--;
+        if (item.quantity > 0) {
+          item.totalPrice = item.unitPrice * item.quantity;
+          calculateTotal();
+          notifyListeners();
+          return null;
+        }
+        saleItemsList
+            .removeWhere((item) => item.productId == saleItem.productId);
+        calculateTotal();
+        notifyListeners();
+        return null;
+      }
+    }
     calculateTotal();
     notifyListeners();
   }
@@ -65,41 +64,30 @@ class SalesStateModel extends Model {
       totPrice += f.unitPrice * f.quantity;
     });
     sale.totalPrice = totPrice;
-    //Sales(saleId, saleStatus, startDate, endDate, currencyId, totalPrice, totalVat);
   }
 
   Future<void> changeCurrency(int currency) async {
     double price = 0;
     double totPrice = 0;
 
-    /*
-    saleItemsList.forEach((item) {
-      db.getProductPrice(item.productId, currency).then((prv){
-        price += prv * item.quantity;
-        //print("Item price is ${price.toString()} and quantity is ${item.quantity.toString()}");
-      }).whenComplete(() {
-        //print("Price is ${price.toStringAsFixed(2)}");
-        sale.totalPrice = price;
-      });
-    });
-    */
-
     for (var item in saleItemsList) {
       price = await db.getProductPrice(item.productId, currency);
       totPrice += price * item.quantity;
-	  item.currencyId = currency;
-	  item.unitPrice = price;
-	  item.totalPrice = price * item.quantity;
-      print(
-          "Item price is ${price.toString()} and total is ${totPrice.toString()}");
+      item.currencyId = currency;
+      item.unitPrice = price;
+      item.totalPrice = price * item.quantity;
     }
 
     sale.currencyId = currency;
     sale.totalPrice = totPrice;
-    print("Price changed to ${sale.totalPrice.toString()}");
+    notifyListeners();
   }
 
   Future<List<Currency>> getCurrencyData() {
     return db.getCurrencyData();
+  }
+
+  Future<List<ProductDetails>> getProductDetailsData() {
+    return db.getProductsDetails(0, 0);
   }
 }

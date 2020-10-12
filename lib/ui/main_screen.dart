@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tengesa/ui/reports_screen/reports_home_screen.dart';
-//import 'package:tengesa/ui/sale_screen/sale_screen.dart';
 import 'package:tengesa/ui/sale_screen/sales_home_screen.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
 import 'package:tengesa/ui/home_screen/home_screen.dart';
 import 'package:tengesa/ui/shared/navigation_drawer.dart';
-import 'package:tengesa/ui/stocks_screen/stocks_screen.dart';
+import 'package:tengesa/ui/stocks_screen/stocks_main_screen.dart';
 import 'package:tengesa/utils/colors.dart';
 import 'package:tengesa/utils/strings.dart';
 
@@ -18,7 +17,6 @@ PageController pageController;
 
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin<MainScreen> {
-
   int _page = 0;
   DateTime currentBackPressTime = DateTime.now();
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
@@ -46,7 +44,7 @@ class _MainScreenState extends State<MainScreen>
       onWillPop: _onWillPop,
       child: Scaffold(
           key: _scaffoldkey,
-          appBar: MyAppBar.getAppBar(context),
+          //appBar: MyAppBar.getAppBar(context),
           drawer: NavigationDrawer(),
           body: PageView(
             children: [
@@ -55,13 +53,13 @@ class _MainScreenState extends State<MainScreen>
                 child: HomeScreen(),
               ),
               Container(
-                color: Colors.white,
-                //child: SaleScreen(),
-                child: SalesHomeScreen()
-              ),
+                  color: Colors.white,
+                  //child: SaleScreen(),
+                  child: SalesHomeScreen()),
               Container(
                 color: Colors.white,
-                child: StocksScreen(),
+                //child: StocksScreen(),
+                child: StocksMainScreen(),
               ),
               Container(
                 color: Colors.white,

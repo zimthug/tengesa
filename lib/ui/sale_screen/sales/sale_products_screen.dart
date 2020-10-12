@@ -2,13 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:provider/provider.dart';
+//import 'package:scoped_model/scoped_model.dart';
 import 'package:tengesa/model/currency.dart';
 import 'package:tengesa/model/sales.dart';
 import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/utils/colors.dart';
 
 class SaleProductsScreen extends StatefulWidget {
+  final VoidCallback onButtonPressed;
+
+  SaleProductsScreen({@required this.onButtonPressed});
+
   @override
   _SaleProductsScreenState createState() => _SaleProductsScreenState();
 }
@@ -16,10 +21,12 @@ class SaleProductsScreen extends StatefulWidget {
 class _SaleProductsScreenState extends State<SaleProductsScreen> {
   Sales sales;
   int _currency;
-  //double _totalPrice;
+  double _totalPrice;
   List<SaleItems> saleItemsList;
   List<Currency> _currencyList = [];
+  Future<Sales> _futureSales;
   List<DropdownMenuItem> _currencyItems = [];
+  SalesStateModel _salesStateModel = SalesStateModel();
 
   @override
   void initState() {
@@ -28,14 +35,20 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    sales =
-        ScopedModel.of<SalesStateModel>(context, rebuildOnChange: true).sale;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    sales = Provider.of<SalesStateModel>(context, listen: true).sale;
 
     saleItemsList =
-        ScopedModel.of<SalesStateModel>(context, rebuildOnChange: true)
-            .saleItemsList;
+        Provider.of<SalesStateModel>(context, listen: true).saleItemsList;
 
+    //_totalPrice = sales.totalPrice;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //_populateCurrenciesDropDownItems();
     return Scaffold(
       body: sales == null
           ? Center(
@@ -52,7 +65,7 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
     setState(() {
       if (_currency == null) {
         _currency = sales.currencyId;
-		//_totalPrice = sales.totalPrice;
+        //_totalPrice = sales.totalPrice;
       }
     });
 
@@ -116,7 +129,7 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
                   value: _currency,
                   isExpanded: true,
                   onChanged: (val) {
-                    ScopedModel.of<SalesStateModel>(context)
+                    Provider.of<SalesStateModel>(context, listen: false)
                         .changeCurrency(val);
                     setState(() {
                       if (val != null) {
@@ -129,64 +142,136 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
             ],
           ),
         ),
-        Container(
-            child: Expanded(
+        Expanded(
           child: ListView.builder(
-              itemCount: ScopedModel.of<SalesStateModel>(context,
-                      rebuildOnChange: true)
-                  .saleItemsList
-                  .length,
+              itemCount: saleItemsList.length,
               itemBuilder: (context, index) {
-                return ScopedModelDescendant<SalesStateModel>(
-                    builder: (context, child, model) {
-                  /*return ListTile(
-                    title: Text(model.saleItemsList[index].product),
-                    subtitle: Text(
-                        "Unit Price ${model.saleItemsList[index].unitPrice.toStringAsFixed(2)}. Total Price ${model.saleItemsList[index].totalPrice.toStringAsFixed(2)}"),
-                  );*/
-                  return Card(
+                return Container(
+                  height: 80,
+                  child: Card(
                     elevation: 8.0,
                     child: Container(
-                      padding: EdgeInsets.all(5.0),
+                      //padding: EdgeInsets.all(5.0),
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.max,
                           children: <Widget>[
                             ListTile(
-                              title: Text(model.saleItemsList[index].product +
-                                  " (" +
-                                  model.saleItemsList[index].quantity
-                                      .toString() +
-                                  ")"),
-                              subtitle: Text(
-                                "Unit Price " +
-                                    model.saleItemsList[index].unitPrice
-                                        .toStringAsFixed(2) +
-                                    " Total Price " +
-                                    model.saleItemsList[index].totalPrice
-                                        .toStringAsFixed(2),
+                              title: Text(
+                                saleItemsList[index].product,
+                                style: TextStyle(
+                                    fontSize: 12, fontWeight: FontWeight.w600),
+                              ),
+                              subtitle: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    width: 160,
+                                    child: Text(
+                                      "Unit Price \$ " +
+                                          saleItemsList[index]
+                                              .unitPrice
+                                              .toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.deepPurple,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 160,
+                                    child: Text(
+                                      "Total Price\$ " +
+                                          saleItemsList[index]
+                                              .totalPrice
+                                              .toStringAsFixed(2),
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              trailing: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  ClipOval(
+                                    child: Material(
+                                      color: Colors.blueGrey,
+                                      child: InkWell(
+                                        splashColor: Colors.deepOrange,
+                                        child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: Icon(Icons.remove)),
+                                        onTap: () {
+                                          var saleItems = SaleItems(
+                                              -1,
+                                              -1,
+                                              saleItemsList[index].productId,
+                                              0,
+                                              0,
+                                              0,
+                                              0,
+                                              " ");
+                                          Provider.of<SalesStateModel>(context,
+                                                  listen: false)
+                                              .removeProduct(saleItems);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 28,
+                                    child: Center(
+                                      child: Text(
+                                        saleItemsList[index]
+                                            .quantity
+                                            .toStringAsFixed(0),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ),
+                                  ),
+                                  ClipOval(
+                                    child: Material(
+                                      color: Colors.blueGrey,
+                                      child: InkWell(
+                                        splashColor: Colors.deepOrange,
+                                        child: SizedBox(
+                                            width: 28,
+                                            height: 28,
+                                            child: Icon(Icons.add)),
+                                        onTap: () {
+                                          var saleItems = SaleItems(
+                                              -1,
+                                              -1,
+                                              saleItemsList[index].productId,
+                                              0,
+                                              0,
+                                              0,
+                                              0,
+                                              " ");
+                                          Provider.of<SalesStateModel>(context,
+                                                  listen: false)
+                                              .addProduct(saleItems);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             )
                           ]),
                     ),
-                  );
-                });
+                  ),
+                );
               }),
-        ))
-        /*
-                ListView.builder(
-                      itemCount: ScopedModel.of<SalesStateModel>(context,
-                              rebuildOnChange: true)
-                          .saleItemsList
-                          .length,
-                      itemBuilder: (context, index) {
-                        return ScopedModelDescendant<SalesStateModel>(
-                            builder: (context, child, model) {
-                              return Container();
-                          //return ListTile();
-                        });
-                      }),
-                */
+        )
       ],
     );
   }
@@ -224,9 +309,8 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
                   Container(
                     width: 150,
                     child: Text(
-                        //"\$ ${sale.totalPrice.toStringAsFixed(2)}",
-						sales.totalPrice.toStringAsFixed(2),
-					    style: TextStyle(
+                      sales.totalPrice.toStringAsFixed(2),
+                      style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 12,
                       ),
@@ -238,13 +322,18 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
           ),
           trailing: Container(
             height: 50,
-            child: IconButton(
-                icon: Icon(
-                  FontAwesomeIcons.chevronCircleRight,
-                  size: 35,
-                  color: AppColors.primaryColor,
-                ),
-                onPressed: null),
+            child: InkWell(
+              splashColor: Colors.deepOrange,
+              child: IconButton(
+                  icon: Icon(
+                    FontAwesomeIcons.chevronCircleRight,
+                    size: 35,
+                    color: AppColors.primaryColor,
+                  ),
+                  onPressed: () {
+                    widget.onButtonPressed();
+                  }),
+            ),
           ),
         ),
       ],
@@ -252,11 +341,8 @@ class _SaleProductsScreenState extends State<SaleProductsScreen> {
   }
 
   _populateCurrenciesDropDownItems() {
-    /*ScopedModelDescendant<SalesStateModel>(
-      builder: (context, child, model) => model.getCurrencyData()
-    );*/
-
-    ScopedModel.of<SalesStateModel>(context).getCurrencyData().then((value) {
+    /*Provider.of<SalesStateModel>(context).getCurrencyData().then((value) {*/
+    _salesStateModel.getCurrencyData().then((value) {
       _currencyList = value;
       value.forEach((val) {
         setState(() {

@@ -2,7 +2,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class AppColors {
-
   //colors
   static List<Color> appGradients = [
     Colors.blueGrey.shade800,
@@ -14,8 +13,4 @@ class AppColors {
   ];
 
   static Color primaryColor = Colors.blue.shade900;
-
-  //randomcolor
-  static final Random _random = new Random();
-
 }

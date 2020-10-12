@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:tengesa/model/sales.dart';
-import 'package:tengesa/model/state/sales_state.dart';
 import 'package:tengesa/ui/sale_screen/sales/barcode_scan_screen.dart';
+import 'package:tengesa/ui/sale_screen/sales/payment_screen.dart';
 import 'package:tengesa/ui/sale_screen/sales/sale_products_screen.dart';
 import 'package:tengesa/ui/sale_screen/sales/search_products_screen.dart';
 import 'package:tengesa/ui/shared/appbar.dart';
 import 'package:tengesa/utils/colors.dart';
 
-class MakeSaleScreen extends StatefulWidget {
+class SalesMainScreen extends StatefulWidget {
   @override
-  _MakeSaleScreenState createState() => _MakeSaleScreenState();
+  _SalesMainScreenState createState() => _SalesMainScreenState();
 }
 
 PageController pageController;
 
-class _MakeSaleScreenState extends State<MakeSaleScreen>
+class _SalesMainScreenState extends State<SalesMainScreen>
     with SingleTickerProviderStateMixin {
   int _page = 0;
 
@@ -40,13 +38,22 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
         bottomNavigationBar: saleBottomNavigationBar(),
         body: PageView(
           children: [
-            Container(color: Colors.white, child: SaleProductsScreen()),
             Container(
                 color: Colors.white,
-                //child: SaleScreen(),
-                child: Container(
-                  child: BarcodeScanScreen(), //Text("Two"),
+                child: SaleProductsScreen(
+                  onButtonPressed: () => pageController.animateToPage(
+                    5,
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.linear,
+                  ),
                 )),
+            Container(
+              color: Colors.white,
+              //child: SaleScreen(),
+              child: Container(
+                child: BarcodeScanScreen(), //Text("Two"),
+              ),
+            ),
             Container(
               color: Colors.white,
               child: Container(
@@ -71,6 +78,12 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
                 child: Text("Five"),
               ),
             ),
+            Container(
+              color: Colors.white,
+              child: Container(
+                child: PaymentScreen(),
+              ),
+            ),
           ],
           controller: pageController,
           physics: NeverScrollableScrollPhysics(),
@@ -81,11 +94,6 @@ class _MakeSaleScreenState extends State<MakeSaleScreen>
   }
 
   Future<bool> _onWillPop() {
-    /*Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => MakeSaleScreen(),
-      ),
-    );*/
     Navigator.of(context).pop();
     return Future.value(false);
   }

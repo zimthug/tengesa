@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tengesa/model/state/user_state.dart';
 import 'dart:async';
 
 import 'package:tengesa/ui/login_screen/login_screen.dart';
@@ -17,6 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   bool loggedIn = false;
   DbManager db = DbManager();
   InitializeDb initDb = InitializeDb();
+  UserStateModel userStateModel = UserStateModel();
 
   @override
   void initState() {
@@ -25,16 +27,16 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<Timer> loadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //SharedPreferences prefs = await SharedPreferences.getInstance();
     //var pc = prefs.getBool("tengesa.initialized");
-    var pc = prefs.getInt("tengesa.initg");
+    //var pc = prefs.getInt("tengesa.initg");
 
-    if (pc == null || pc == 0) {
-        initDb.intializeDatabase();
-        initDb.intializeTestUser();
-      //prefs.setBool("tengesa.initialized", true);
-      prefs.setInt("tengesa.initg", 1);
-    }
+    //if (pc == null || pc == 0) {
+    //    initDb.intializeDatabase();
+    //    initDb.intializeTestUser();
+    //  //prefs.setBool("tengesa.initialized", true);
+    //  prefs.setInt("tengesa.initg", 1);
+    //}
 
     /*
     if (prefs.getBool("tengesa.loggedin")) {
@@ -42,11 +44,19 @@ class _SplashScreenState extends State<SplashScreen> {
     }
     */
 
-    var username = prefs.getString("tengesa.username");
+    //var username = prefs.getString("tengesa.username");
 
-    if (username != null) {
-      loggedIn = true;
-    }
+    //if (username != null) {
+    //  loggedIn = true;
+    //}
+
+    //loggedIn = usersStateModel.checkLoggedIn() as bool;
+
+    userStateModel.checkLoggedIn().then((value) {
+      setState(() {
+        loggedIn = value;
+      });
+    });
 
     return new Timer(Duration(seconds: 5), onDoneLoading);
   }
@@ -54,10 +64,16 @@ class _SplashScreenState extends State<SplashScreen> {
   onDoneLoading() async {
     if (loggedIn) {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => MainScreen()));
+        MaterialPageRoute(
+          builder: (context) => MainScreen(),
+        ),
+      );
     } else {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()));
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
     }
   }
 
